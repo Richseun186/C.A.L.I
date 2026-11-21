@@ -1,0 +1,78 @@
+<tr id="row-{{ score.id }}" class="hover:bg-slate-50 transition-colors">
+  <td class="py-3 px-4 text-xs font-mono font-bold text-slate-700 whitespace-nowrap">
+    {{ score.student.admission_number }}
+  </td>
+  <td class="py-3 px-4 text-xs font-semibold text-slate-900 whitespace-nowrap">
+    {{ score.student.user.get_full_name }}
+  </td>
+
+  <!-- CA 1 Input -->
+  <td class="py-2 px-3 text-center">
+    {% if sheet.is_locked %}
+      <span class="font-mono text-xs font-bold text-slate-700">{{ score.ca1 }}</span>
+    {% else %}
+      <input type="number" step="0.5" min="0" max="{{ sheet.class_arm.school_class.level_group.ca1_max }}"
+             value="{{ score.ca1 }}"
+             name="value"
+             hx-post="{% url 'assessments:update-score-cell' score.id %}"
+             hx-vals='{"field": "ca1"}'
+             hx-target="#row-{{ score.id }}"
+             hx-swap="outerHTML"
+             hx-trigger="change, keyup delay:600ms"
+             class="w-20 px-2 py-1.5 text-center font-mono text-xs font-bold border rounded-lg focus:ring-2 focus:ring-sky-500 focus:outline-none transition-all {% if saved_field == 'ca1' %}border-emerald-500 bg-emerald-50 text-emerald-900{% else %}border-slate-300 bg-white text-slate-800{% endif %}">
+    {% endif %}
+  </td>
+
+  <!-- CA 2 Input -->
+  <td class="py-2 px-3 text-center">
+    {% if sheet.is_locked %}
+      <span class="font-mono text-xs font-bold text-slate-700">{{ score.ca2 }}</span>
+    {% else %}
+      <input type="number" step="0.5" min="0" max="{{ sheet.class_arm.school_class.level_group.ca2_max }}"
+             value="{{ score.ca2 }}"
+             name="value"
+             hx-post="{% url 'assessments:update-score-cell' score.id %}"
+             hx-vals='{"field": "ca2"}'
+             hx-target="#row-{{ score.id }}"
+             hx-swap="outerHTML"
+             hx-trigger="change, keyup delay:600ms"
+             class="w-20 px-2 py-1.5 text-center font-mono text-xs font-bold border rounded-lg focus:ring-2 focus:ring-sky-500 focus:outline-none transition-all {% if saved_field == 'ca2' %}border-emerald-500 bg-emerald-50 text-emerald-900{% else %}border-slate-300 bg-white text-slate-800{% endif %}">
+    {% endif %}
+  </td>
+
+  <!-- Exam Input -->
+  <td class="py-2 px-3 text-center">
+    {% if sheet.is_locked %}
+      <span class="font-mono text-xs font-bold text-slate-700">{{ score.exam }}</span>
+    {% else %}
+      <input type="number" step="0.5" min="0" max="{{ sheet.class_arm.school_class.level_group.exam_max }}"
+             value="{{ score.exam }}"
+             name="value"
+             hx-post="{% url 'assessments:update-score-cell' score.id %}"
+             hx-vals='{"field": "exam"}'
+             hx-target="#row-{{ score.id }}"
+             hx-swap="outerHTML"
+             hx-trigger="change, keyup delay:600ms"
+             class="w-20 px-2 py-1.5 text-center font-mono text-xs font-bold border rounded-lg focus:ring-2 focus:ring-sky-500 focus:outline-none transition-all {% if saved_field == 'exam' %}border-emerald-500 bg-emerald-50 text-emerald-900{% else %}border-slate-300 bg-white text-slate-800{% endif %}">
+    {% endif %}
+  </td>
+
+  <!-- Total & Grade Auto-Calculated -->
+  <td class="py-3 px-4 font-mono font-black text-slate-900 text-center text-xs">
+    {{ score.total }}
+  </td>
+
+  <td class="py-3 px-4 font-bold text-center">
+    <span class="px-2.5 py-0.5 rounded-full text-[11px] font-extrabold
+      {% if score.grade in 'A,A1,B,B2,B3,EX' %}bg-emerald-100 text-emerald-800
+      {% elif score.grade in 'C,C4,C5,C6,ME' %}bg-blue-100 text-blue-800
+      {% elif score.grade in 'P,D7,E8,DV' %}bg-amber-100 text-amber-800
+      {% else %}bg-rose-100 text-rose-800{% endif %}">
+      {{ score.grade|default:"-" }}
+    </span>
+  </td>
+
+  <td class="py-3 px-4 text-xs font-medium text-slate-500 whitespace-nowrap">
+    {{ score.remark|default:"-" }}
+  </td>
+</tr>

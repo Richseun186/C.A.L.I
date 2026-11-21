@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+{% block title %}Parent Portal | CALI Schools{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-slate-50 flex flex-col">
+  <!-- Navigation Header -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-30">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <img src="/static/img/cali_logo.png" alt="CALI Logo" class="w-10 h-10 object-contain">
+        <div>
+          <h1 class="text-base font-extrabold text-slate-900 leading-none">CALI SCHOOLS</h1>
+          <p class="text-[11px] font-semibold text-sky-700">Parent Portal</p>
+        </div>
+      </div>
+
+      <div class="flex items-center space-x-4">
+        <div class="hidden sm:block text-right">
+          <p class="text-xs font-bold text-slate-800">{{ request.user.get_full_name }}</p>
+          <p class="text-[10px] text-slate-500 font-medium">Guardian Account</p>
+        </div>
+
+        <form method="POST" action="{% url 'accounts:logout' %}">
+          {% csrf_token %}
+          <button type="submit" 
+                  class="px-3 py-1.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-600 hover:bg-slate-100 transition-all">
+            Sign Out
+          </button>
+        </form>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Multi-Ward View -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full">
+    <div class="mb-8">
+      <h2 class="text-2xl font-black text-slate-900 tracking-tight">Your Children / Wards</h2>
+      <p class="text-xs text-slate-500 mt-1">
+        Select a child below to view their terminal report card, assessment breakdown, and fee clearance status.
+      </p>
+    </div>
+
+    {% if wards %}
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for student in wards %}
+          {% with level=student.current_arm.school_class.level_group %}
+          <div class="bg-white rounded-3xl p-6 shadow-sm hover:shadow-md border border-slate-200/80 transition-all flex flex-col justify-between">
+            <div>
+              <!-- Top Card Badge: Level Group Category -->
+              <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+                <span class="px-3 py-1 rounded-full text-[11px] font-extrabold tracking-wide uppercase
+                  {% if level.category == 'EARLY_YEARS' %}bg-amber-100 text-amber-800
+                  {% elif level.category == 'PRIMARY' %}bg-emerald-100 text-emerald-800
+                  {% elif level.category == 'JSS' %}bg-sky-100 text-sky-800
+                  {% else %}bg-indigo-100 text-indigo-800{% endif %}">
+                  {{ level.name }}
+                </span>
+
+                <span class="text-xs font-mono font-bold text-slate-400">
+                  {{ student.admission_number }}
+                </span>
+              </div>
+
+              <!-- Student Profile Summary -->
+              <div class="flex items-center space-x-4 my-5">
+                <div class="w-16 h-16 rounded-2xl bg-slate-100 overflow-hidden flex-shrink-0 border border-slate-200 flex items-center justify-center">
+                  {% if student.passport_photo %}
+                    <img src="{{ student.passport_photo.url }}" alt="{{ student.user.get_full_name }}" class="w-full h-full object-cover">
+                  {% else %}
+                    <span class="text-2xl font-black text-slate-400">{{ student.user.first_name|first }}</span>
+                  {% endif %}
+                </div>
+
+                <div>
+                  <h3 class="text-base font-bold text-slate-900 leading-snug">
+                    {{ student.user.get_full_name }}
+                  </h3>
+                  <p class="text-xs text-slate-500 font-medium">
+                    Class: <span class="font-bold text-slate-800">{{ student.current_arm }}</span>
+                  </p>
+                  {% if student.department != 'NONE' %}
+                    <p class="text-[11px] font-semibold text-sky-700">
+                      Dept: {{ student.get_department_display }}
+                    </p>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+
+            <!-- Action Button -->
+            <div class="pt-4 border-t border-slate-100 mt-2">
+              {% if current_term %}
+                <a href="{% url 'results:view-report' current_term.id student.id %}"
+                   class="w-full py-3 px-4 rounded-xl font-bold text-xs flex items-center justify-center space-x-2 transition-all shadow-sm
+                          {% if level.category == 'EARLY_YEARS' %}bg-amber-500 hover:bg-amber-600 text-white
+                          {% elif level.category == 'PRIMARY' %}bg-emerald-600 hover:bg-emerald-700 text-white
+                          {% elif level.category == 'JSS' %}bg-sky-600 hover:bg-sky-700 text-white
+                          {% else %}bg-indigo-600 hover:bg-indigo-700 text-white{% endif %}">
+                  <span>View Terminal Report Card</span>
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                  </svg>
+                </a>
+              {% else %}
+                <button disabled class="w-full py-2.5 bg-slate-100 text-slate-400 font-bold text-xs rounded-xl cursor-not-allowed">
+                  No Active Term Published
+                </button>
+              {% endif %}
+            </div>
+          </div>
+          {% endwith %}
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="bg-white rounded-3xl p-12 text-center max-w-md mx-auto border border-slate-200">
+        <div class="w-16 h-16 bg-sky-50 text-sky-600 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">
+          ?
+        </div>
+        <h3 class="text-base font-bold text-slate-900">No Wards Linked</h3>
+        <p class="text-xs text-slate-500 mt-1 mb-6">
+          Your phone number has not yet been linked to a pupil or student profile. Please contact CALI Schools Admin.
+        </p>
+      </div>
+    {% endif %}
+  </main>
+</div>
+{% endblock %}

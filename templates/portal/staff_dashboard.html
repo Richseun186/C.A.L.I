@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% block title %}Staff Workspace | CALI Schools{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-slate-50 flex flex-col">
+  <!-- Staff Top Bar -->
+  <header class="bg-slate-900 text-white sticky top-0 z-30 shadow-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <img src="/static/img/cali_logo.png" alt="CALI Logo" class="w-10 h-10 object-contain">
+        <div>
+          <h1 class="text-base font-extrabold leading-none">CALI SCHOOLS</h1>
+          <p class="text-[11px] font-medium text-sky-400">Staff Gradebook Workspace</p>
+        </div>
+      </div>
+
+      <div class="flex items-center space-x-4">
+        <div class="text-right">
+          <p class="text-xs font-bold text-white">{{ request.user.get_full_name }}</p>
+          <p class="text-[10px] text-sky-300 font-medium">{{ request.user.get_role_display }}</p>
+        </div>
+
+        {% if request.user.is_staff or request.user.role in 'SUPER_ADMIN,PROPRIETOR,PRINCIPAL,HEADMISTRESS,EXAM_OFFICER' %}
+          <a href="{% url 'academics:subject-bank' %}"
+             class="hidden sm:inline-flex px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-xs font-bold transition-all shadow-sm">
+            Nigerian Subject Bank
+          </a>
+        {% endif %}
+
+        {% if request.user.is_staff %}
+          <a href="/admin/" target="_blank"
+             class="hidden sm:inline-flex px-3 py-1.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-xs font-bold transition-all">
+            Django Admin
+          </a>
+        {% endif %}
+
+        <form method="POST" action="{% url 'accounts:logout' %}">
+          {% csrf_token %}
+          <button type="submit" 
+                  class="px-3 py-1.5 rounded-xl border border-slate-700 text-xs font-bold text-slate-300 hover:bg-slate-800 transition-all">
+            Sign Out
+          </button>
+        </form>
+      </div>
+    </div>
+  </header>
+
+  <!-- Content -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-slate-200 gap-4">
+      <div>
+        <h2 class="text-2xl font-black text-slate-900 tracking-tight">Assigned Score Sheets</h2>
+        <p class="text-xs text-slate-500 mt-1">
+          Select a subject sheet below to record CA and Exam scores, or submit for terminal approval.
+        </p>
+      </div>
+
+      {% if current_term %}
+        <div class="inline-flex items-center space-x-2 bg-sky-50 border border-sky-200 px-4 py-2 rounded-2xl">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="text-xs font-bold text-sky-900 font-mono">{{ current_term }}</span>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Score Sheets Grid -->
+    <div class="mt-8">
+      {% with sheets=request.user.score_sheets.all %}
+        {% if sheets %}
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for sheet in sheets %}
+              <div class="bg-white rounded-3xl p-6 shadow-sm hover:shadow-md border border-slate-200 transition-all flex flex-col justify-between">
+                <div>
+                  <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                    <span class="text-xs font-mono font-bold text-slate-400">{{ sheet.class_arm.school_class.level_group.name }}</span>
+                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase
+                      {% if sheet.status == 'APPROVED' %}bg-emerald-100 text-emerald-800
+                      {% elif sheet.status == 'SUBMITTED' %}bg-blue-100 text-blue-800
+                      {% elif sheet.status == 'REVIEWED' %}bg-indigo-100 text-indigo-800
+                      {% else %}bg-amber-100 text-amber-800{% endif %}">
+                      {{ sheet.get_status_display }}
+                    </span>
+                  </div>
+
+                  <h3 class="text-lg font-black text-slate-900 mt-3">{{ sheet.subject.name }}</h3>
+                  <p class="text-xs text-slate-600 font-semibold mt-0.5">Class: {{ sheet.class_arm }}</p>
+                  <p class="text-xs text-slate-400 mt-2">Pupils Enrolled: {{ sheet.scores.count }}</p>
+                </div>
+
+                <div class="pt-5 mt-4 border-t border-slate-100">
+                  <a href="{% url 'assessments:sheet-detail' sheet.id %}"
+                     class="w-full py-2.5 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs flex items-center justify-center space-x-2 transition-all">
+                    <span>Open Gradebook</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                    </svg>
+                  </a>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="bg-white rounded-3xl p-12 text-center max-w-lg mx-auto border border-slate-200">
+            <div class="w-16 h-16 bg-slate-100 text-slate-400 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+              📋
+            </div>
+            <h3 class="text-base font-bold text-slate-900">No Sheets Currently Assigned</h3>
+            <p class="text-xs text-slate-500 mt-1">
+              Your account has not yet been assigned to a subject class for this session. Contact the Exam Officer or Admin to assign your timetable.
+            </p>
+          </div>
+        {% endif %}
+      {% endwith %}
+    </div>
+  </main>
+</div>
+{% endblock %}

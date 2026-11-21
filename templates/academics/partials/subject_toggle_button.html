@@ -1,0 +1,20 @@
+<div id="btn-subject-{{ master.id }}" class="inline-flex items-center">
+  <button type="button"
+          hx-post="{% url 'academics:toggle-subject' master.id %}"
+          hx-target="#btn-subject-{{ master.id }}"
+          hx-swap="outerHTML"
+          class="px-4 py-2 rounded-xl text-xs font-black transition-all flex items-center space-x-2 shadow-sm transform active:scale-95
+                 {% if is_offered %}
+                   bg-emerald-600 hover:bg-emerald-700 text-white shadow-emerald-600/20
+                 {% else %}
+                   bg-slate-100 hover:bg-slate-200 text-slate-600 border border-slate-300
+                 {% endif %}">
+    {% if is_offered %}
+      <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span>
+      <span>Offered in School &check;</span>
+    {% else %}
+      <span class="w-2 h-2 rounded-full bg-slate-400"></span>
+      <span>+ Activate Subject</span>
+    {% endif %}
+  </button>
+</div>

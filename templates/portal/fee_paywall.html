@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+{% block title %}Fees Clearance Required | CALI Schools{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-slate-100 flex flex-col justify-between">
+  <!-- Top Bar -->
+  <header class="bg-white border-b border-slate-200 p-4 sticky top-0 z-30 shadow-sm">
+    <div class="max-w-4xl mx-auto flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <img src="/static/img/cali_logo.png" alt="CALI Schools" class="w-10 h-10 object-contain">
+        <div>
+          <h1 class="text-sm font-black text-slate-900 leading-none">CALI SCHOOLS</h1>
+          <p class="text-[11px] font-semibold text-slate-500">Bursary & Result Clearance Gate</p>
+        </div>
+      </div>
+      <a href="{% url 'portal:dashboard' %}" class="text-xs font-bold text-sky-700 hover:underline flex items-center space-x-1">
+        <span>&larr; Return to Dashboard</span>
+      </a>
+    </div>
+  </header>
+
+  <main class="max-w-xl mx-auto w-full px-4 py-8">
+    <div class="bg-white rounded-3xl p-8 sm:p-10 shadow-2xl border border-slate-200 text-center relative overflow-hidden animate-fade-up">
+      
+      <!-- Locked Rubber Stamp in corner -->
+      <div class="absolute right-4 top-4 select-none">
+        <span class="rubber-stamp stamp-locked text-[11px]">
+          FEES &bull; OWING
+        </span>
+      </div>
+
+      <!-- Icon with soft pulse -->
+      <div class="w-16 h-16 bg-rose-50 text-rose-600 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-rose-200 shadow-sm mt-2">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+        </svg>
+      </div>
+
+      <h2 class="text-2xl font-black text-slate-900 tracking-tight">Terminal Result Locked</h2>
+      <p class="text-xs text-slate-500 mt-2 max-w-sm mx-auto leading-relaxed">
+        Terminal academic records are released upon full clearance of tuition and statutory levies for this term.
+      </p>
+
+      <!-- Student & Fee Breakdown Box -->
+      <div class="bg-slate-50/80 rounded-2xl p-5 my-6 text-left border border-slate-200">
+        <div class="flex justify-between items-center pb-3 border-b border-slate-200">
+          <div>
+            <p class="text-xs font-bold text-slate-800">{{ student.user.get_full_name }}</p>
+            <p class="text-[11px] text-slate-500 font-mono">{{ student.admission_number }} &bull; {{ student.current_arm }}</p>
+          </div>
+          <span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase bg-rose-100 text-rose-800 border border-rose-200">
+            Uncleared Balance
+          </span>
+        </div>
+
+        <div class="mt-4 space-y-2.5 text-xs">
+          <div class="flex justify-between text-slate-600">
+            <span>Total Fees Billed:</span>
+            <span class="font-mono font-bold text-slate-800">NGN {{ fee_status.total_billed|floatformat:2|default:"0.00" }}</span>
+          </div>
+          <div class="flex justify-between text-slate-600">
+            <span>Total Amount Paid:</span>
+            <span class="font-mono font-bold text-emerald-600">NGN {{ fee_status.total_paid|floatformat:2|default:"0.00" }}</span>
+          </div>
+          <div class="flex justify-between text-slate-900 pt-3 border-t border-slate-200 font-extrabold text-sm">
+            <span>Outstanding Tuition Balance:</span>
+            <span class="font-mono text-rose-600 text-base">NGN {{ fee_status.balance|floatformat:2|default:"0.00" }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="space-y-4">
+        <button id="paystack-btn"
+                onclick="payWithPaystack()"
+                class="w-full py-4 bg-gradient-to-r from-emerald-600 to-teal-600 hover:opacity-95 text-white font-black rounded-xl text-sm shadow-xl shadow-emerald-600/25 transition-all flex items-center justify-center space-x-2 transform active:scale-[0.98]">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/>
+          </svg>
+          <span>Pay NGN {{ fee_status.balance|floatformat:2 }} via Paystack &rarr;</span>
+        </button>
+
+        <!-- Direct Bank Transfer Details Card -->
+        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 text-left text-xs text-slate-600 space-y-1.5">
+          <p class="font-extrabold text-slate-900 flex items-center space-x-1.5">
+            <span>🏛️</span>
+            <span>Direct Nigerian Bank Transfer Option</span>
+          </p>
+          <div class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-200 text-[11px]">
+            <div>
+              <p class="text-slate-400 font-semibold uppercase text-[9px]">Bank</p>
+              <p class="font-bold text-slate-900">First Bank of Nigeria</p>
+            </div>
+            <div>
+              <p class="text-slate-400 font-semibold uppercase text-[9px]">Account Number</p>
+              <p class="font-mono font-extrabold text-sky-800 text-xs">1023948571</p>
+            </div>
+            <div class="col-span-2">
+              <p class="text-slate-400 font-semibold uppercase text-[9px]">Account Name</p>
+              <p class="font-bold text-slate-900">CALI International Schools Ltd</p>
+            </div>
+          </div>
+          <p class="text-[10px] text-slate-500 pt-2 border-t border-slate-100 italic">
+            Once transferred, send your debit alert / receipt with student's Admission No. to WhatsApp <strong>+234 800 CALI SCH</strong> for instant clearance.
+          </p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="p-4 text-center text-xs text-slate-400">
+    &copy; 2026 CALI Schools Bursary Department.
+  </footer>
+</div>
+
+<!-- Paystack Inline Popup JS -->
+<script src="https://js.paystack.co/v1/inline.js"></script>
+<script>
+  function payWithPaystack() {
+    var handler = PaystackPop.setup({
+      key: '{{ paystack_public_key }}',
+      email: '{{ student.user.email|default:"bursary@calischools.ng" }}',
+      amount: {{ fee_status.balance|default:0 }} * 100,
+      currency: 'NGN',
+      metadata: {
+        student_id: '{{ student.id }}',
+        term_session_id: '{{ term_session.id }}',
+        admission_number: '{{ student.admission_number }}'
+      },
+      callback: function(response) {
+        window.location.href = "{% url 'finance:verify-payment' %}?reference=" + response.reference;
+      },
+      onClose: function() {
+        alert('Payment window closed.');
+      }
+    });
+    handler.openIframe();
+  }
+</script>
+{% endblock %}

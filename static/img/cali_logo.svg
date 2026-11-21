@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <defs>
+    <linearGradient id="caliGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0284c7"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+  </defs>
+  <rect width="120" height="120" rx="28" fill="url(#caliGrad)"/>
+  <circle cx="60" cy="60" r="46" fill="none" stroke="#f59e0b" stroke-width="3" stroke-dasharray="6,4"/>
+  <path d="M 68 40 C 50 40, 42 50, 42 60 C 42 70, 50 80, 68 80 C 74 80, 78 77, 80 74" fill="none" stroke="#ffffff" stroke-width="9" stroke-linecap="round"/>
+  <circle cx="60" cy="24" r="5" fill="#10b981"/>
+</svg>

@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+{% block title %}Early Years Progress Report | {{ student.user.get_full_name }}{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-amber-50/60 via-sky-50/40 to-emerald-50/40 p-4 sm:p-8 flex flex-col items-center">
+
+  <!-- Printable A4 Report Card Container -->
+  <div class="w-full max-w-4xl bg-white rounded-[2.5rem] p-6 sm:p-10 shadow-2xl border-4 border-amber-300/80 text-slate-900 relative overflow-hidden">
+    
+    <!-- Top Action Bar (No-Print) -->
+    <div class="no-print flex justify-between items-center pb-6 mb-6 border-b border-amber-100">
+      <a href="{% url 'portal:dashboard' %}" class="text-xs font-bold text-amber-800 hover:underline flex items-center space-x-1">
+        <span>&larr; Back to Portal</span>
+      </a>
+      <div class="flex items-center space-x-3">
+        <a href="{% url 'results:report-card-pdf' term_session.id student.id %}" target="_blank"
+           class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-xl text-xs font-bold shadow-md transition-all flex items-center space-x-1.5">
+          <span>Download PDF</span>
+        </a>
+        <button onclick="window.print()"
+                class="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold shadow-md transition-all">
+          Print
+        </button>
+      </div>
+    </div>
+
+    <!-- Cheerful Early Years Header & Crest -->
+    <div class="text-center pb-6 border-b-2 border-dashed border-amber-300 relative">
+      <div class="flex items-center justify-center space-x-4 mb-3">
+        <div class="w-16 h-16 p-2 bg-amber-100 rounded-3xl shadow-inner flex items-center justify-center border-2 border-amber-300">
+          <img src="/static/img/cali_logo.png" alt="CALI Schools" class="w-12 h-12 object-contain">
+        </div>
+        <div class="text-left">
+          <h1 class="text-2xl font-black tracking-tight text-amber-950 uppercase leading-none">
+            CALI EARLY YEARS ACADEMY
+          </h1>
+          <p class="text-xs font-black text-amber-700 tracking-wider mt-1">
+            🌟 FOUNDATION STAGE &bull; NURSERY & PRE-SCHOOL EXCELLENCE
+          </p>
+          <p class="text-[11px] text-slate-500 font-medium">Lagos, Nigeria &bull; earlyyears@calischools.ng</p>
+        </div>
+      </div>
+      <div class="inline-block px-5 py-1.5 bg-gradient-to-r from-amber-400 to-yellow-400 text-amber-950 rounded-full text-xs font-black tracking-widest uppercase shadow-sm">
+        EARLY YEARS PROGRESS & DEVELOPMENT REPORT &bull; {{ term_session.get_term_display|upper }}
+      </div>
+    </div>
+
+    <!-- Pupil Info Banner with Bubbly Squircles -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 p-5 bg-amber-50/70 rounded-3xl my-6 border-2 border-amber-200 text-xs">
+      <div>
+        <p class="text-amber-700 font-bold uppercase text-[10px]">Pupil's Name</p>
+        <p class="font-black text-slate-900 text-sm mt-0.5">{{ student.user.get_full_name }}</p>
+      </div>
+      <div>
+        <p class="text-amber-700 font-bold uppercase text-[10px]">Admission No.</p>
+        <p class="font-mono font-black text-slate-900 text-sm mt-0.5">{{ student.admission_number }}</p>
+      </div>
+      <div>
+        <p class="text-amber-700 font-bold uppercase text-[10px]">Class / Stage</p>
+        <p class="font-black text-amber-900 text-sm mt-0.5">{{ student.current_arm }}</p>
+      </div>
+      <div>
+        <p class="text-amber-700 font-bold uppercase text-[10px]">Attendance</p>
+        <p class="font-black text-slate-900 text-sm mt-0.5">
+          {{ summary.times_present|default:108 }} / {{ summary.times_school_opened|default:110 }} Days
+        </p>
+      </div>
+    </div>
+
+    <!-- Cognitive Subjects Table -->
+    <div class="mb-6">
+      <h3 class="text-xs font-black uppercase text-amber-900 tracking-wider mb-2.5 flex items-center space-x-2">
+        <span>🎨 Cognitive Learning & Early Academics</span>
+      </h3>
+      <table class="w-full text-left border-2 border-amber-200 text-xs rounded-2xl overflow-hidden shadow-sm">
+        <thead class="bg-amber-200/70 text-amber-950 font-black text-[11px] uppercase">
+          <tr>
+            <th class="py-2.5 px-3">Subject / Learning Area</th>
+            <th class="py-2.5 px-2 text-center">Score (100)</th>
+            <th class="py-2.5 px-2 text-center">Development Rating</th>
+            <th class="py-2.5 px-3">Teacher Observation</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-amber-100 bg-white">
+          {% for score in scores %}
+            <tr class="hover:bg-amber-50/60 transition-colors">
+              <td class="py-2.5 px-3 font-bold text-slate-800">{{ score.score_sheet.subject.name }}</td>
+              <td class="py-2.5 px-2 text-center font-mono font-black text-amber-950 bg-amber-50/40">{{ score.total }}</td>
+              <td class="py-2.5 px-2 text-center">
+                <span class="px-3 py-1 rounded-full text-[10px] font-black shadow-sm
+                  {% if score.grade == 'EX' %}bg-emerald-100 text-emerald-800 border border-emerald-300
+                  {% elif score.grade == 'ME' %}bg-sky-100 text-sky-800 border border-sky-300
+                  {% elif score.grade == 'DV' %}bg-amber-100 text-amber-800 border border-amber-300
+                  {% else %}bg-rose-100 text-rose-800 border border-rose-300{% endif %}">
+                  {{ score.grade }} &bull; {{ score.remark }}
+                </span>
+              </td>
+              <td class="py-2.5 px-3 text-[11px] text-slate-600 font-medium">Demonstrates enthusiastic participation</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Developmental Milestones (Social, Motor, Practical Life) -->
+    {% if skills %}
+      <div class="mb-6">
+        <h3 class="text-xs font-black uppercase text-amber-900 tracking-wider mb-2.5 flex items-center space-x-2">
+          <span>🌱 Early Years Developmental Milestones</span>
+        </h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs border-2 border-amber-200 p-4 rounded-3xl bg-amber-50/40">
+          {% for sk in skills %}
+            <div class="flex justify-between items-center py-2 px-3 bg-white rounded-2xl border border-amber-100 shadow-sm">
+              <span class="text-slate-700 font-bold">{{ sk.skill.name }}</span>
+              <span class="font-extrabold text-amber-900 text-xs">
+                {% if sk.rating == 5 %}⭐⭐⭐⭐⭐ (Exceeding)
+                {% elif sk.rating == 4 %}⭐⭐⭐⭐ (Meeting)
+                {% elif sk.rating == 3 %}⭐⭐⭐ (Good)
+                {% elif sk.rating == 2 %}⭐⭐ (Developing)
+                {% else %}⭐ (Emerging){% endif %}
+              </span>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+
+    <!-- Teacher and Headmistress Remarks with Stamp Simulation -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mt-6 text-xs">
+      <div class="p-5 rounded-3xl bg-amber-50/80 border-2 border-amber-200">
+        <p class="font-black text-amber-950 uppercase text-[10px] tracking-wider">Class Teacher's Observation</p>
+        <p class="mt-2 text-slate-700 italic leading-relaxed">
+          "{{ summary.class_teacher_remark|default:'A delightfully observant pupil who participates actively in rhymes, handwriting, and group play.' }}"
+        </p>
+      </div>
+
+      <div class="p-5 rounded-3xl bg-amber-50/80 border-2 border-amber-200 flex flex-col justify-between">
+        <div>
+          <p class="font-black text-amber-950 uppercase text-[10px] tracking-wider">Head of Early Years Remark</p>
+          <p class="mt-2 text-slate-700 italic leading-relaxed">
+            "{{ summary.head_teacher_remark|default:'Satisfactory progress across foundational literacy and numeracy milestones.' }}"
+          </p>
+        </div>
+
+        <div class="mt-4 flex justify-between items-end border-t border-amber-200 pt-3 text-[10px] text-slate-500 font-semibold">
+          <span>Next Term: <strong>{{ term_session.next_term_resumption|date:"d M, Y"|default:"TBA" }}</strong></span>
+          <span class="font-bold text-amber-950">Signed: Mrs. A. Cali</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

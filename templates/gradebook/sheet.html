@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% block title %}{{ sheet.subject.name }} Gradebook | {{ sheet.class_arm }}{% endblock %}
+
+{% block content %}
+<div x-data="{ isOnline: navigator.onLine }"
+     x-init="window.addEventListener('online', () => isOnline = true); window.addEventListener('offline', () => isOnline = false)"
+     class="min-h-screen bg-slate-50 flex flex-col">
+
+  <!-- Network Warning Banner -->
+  <div x-show="!isOnline" x-cloak
+       class="bg-amber-500 text-slate-950 px-4 py-2 text-center text-xs font-bold sticky top-0 z-50 flex items-center justify-center space-x-2">
+    <span>⚠️ Network connection lost! Any unsaved score edits will be retried when internet reconnects.</span>
+  </div>
+
+  <!-- Top Action Navigation -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-4">
+        <a href="{% url 'portal:dashboard' %}" class="text-slate-400 hover:text-slate-700">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+          </svg>
+        </a>
+        <div>
+          <h1 class="text-base font-extrabold text-slate-900 leading-none">
+            {{ sheet.subject.name }} &bull; {{ sheet.class_arm }}
+          </h1>
+          <p class="text-[11px] font-semibold text-slate-500 mt-0.5">
+            {{ sheet.term_session }} &bull; Max CA1: {{ level.ca1_max }}, CA2: {{ level.ca2_max }}, Exam: {{ level.exam_max }}
+          </p>
+        </div>
+      </div>
+
+      <!-- Status and Action Controls -->
+      <div class="flex items-center space-x-3">
+        <span class="px-3 py-1 rounded-full text-xs font-extrabold uppercase
+          {% if sheet.status == 'APPROVED' %}bg-emerald-100 text-emerald-800
+          {% elif sheet.status == 'SUBMITTED' %}bg-blue-100 text-blue-800
+          {% elif sheet.status == 'REVIEWED' %}bg-indigo-100 text-indigo-800
+          {% else %}bg-amber-100 text-amber-800{% endif %}">
+          {{ sheet.get_status_display }}
+        </span>
+
+        {% if not sheet.is_locked %}
+          {% if sheet.status == 'DRAFT' %}
+            <a href="{% url 'assessments:transition-sheet' sheet.id 'SUBMITTED' %}"
+               class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-all shadow-sm">
+              Submit Sheet &rarr;
+            </a>
+          {% elif sheet.status == 'SUBMITTED' and request.user.role in 'EXAM_OFFICER,SUPER_ADMIN' %}
+            <a href="{% url 'assessments:transition-sheet' sheet.id 'REVIEWED' %}"
+               class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold transition-all shadow-sm">
+              Mark as Reviewed &rarr;
+            </a>
+          {% elif sheet.status in 'SUBMITTED,REVIEWED' and request.user.role in 'HEADMISTRESS,PRINCIPAL,SUPER_ADMIN,PROPRIETOR' %}
+            <a href="{% url 'assessments:transition-sheet' sheet.id 'APPROVED' %}"
+               onclick="return confirm('Are you sure you want to approve and permanently lock this score sheet?')"
+               class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all shadow-sm">
+              Approve & Lock &check;
+            </a>
+          {% endif %}
+        {% else %}
+          <span class="text-xs font-bold text-slate-400 flex items-center space-x-1">
+            <svg class="w-4 h-4 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
+            </svg>
+            <span>Locked</span>
+          </span>
+        {% endif %}
+      </div>
+    </div>
+  </header>
+
+  <!-- Interactive Score Sheet Table -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full">
+    <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
+      
+      <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+        <p class="text-xs text-slate-500 font-medium">
+          Scores are <strong>automatically saved</strong> as you type. Use Tab to jump across inputs.
+        </p>
+        <span class="text-xs font-mono font-bold text-slate-600">{{ scores.count }} Pupils Enrolled</span>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-slate-100/75 border-b border-slate-200 text-[11px] font-extrabold uppercase text-slate-600 tracking-wider">
+              <th class="py-3 px-4">Adm No.</th>
+              <th class="py-3 px-4">Pupil Name</th>
+              <th class="py-3 px-3 text-center">CA 1 (Max {{ level.ca1_max }})</th>
+              <th class="py-3 px-3 text-center">CA 2 (Max {{ level.ca2_max }})</th>
+              <th class="py-3 px-3 text-center">Exam (Max {{ level.exam_max }})</th>
+              <th class="py-3 px-4 text-center">Total (100)</th>
+              <th class="py-3 px-4 text-center">Grade</th>
+              <th class="py-3 px-4">Remark</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100">
+            {% for score in scores %}
+              {% include 'gradebook/partials/score_row.html' %}
+            {% empty %}
+              <tr>
+                <td colspan="8" class="text-center py-12 text-slate-400 text-xs font-medium">
+                  No pupils currently enrolled in this class arm.
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+{% endblock %}

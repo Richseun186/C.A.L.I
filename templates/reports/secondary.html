@@ -1,0 +1,229 @@
+{% extends 'base.html' %}
+{% block title %}Secondary Academic Report Card | {{ student.user.get_full_name }}{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-slate-900/5 p-4 sm:p-8 flex flex-col items-center">
+
+  <!-- Interactive Result Animation Card (Screen only) -->
+  <div class="no-print w-full max-w-4xl mb-6">
+    <div x-data="{
+           count: 0,
+           targetAverage: {{ summary.average|default:0 }},
+           init() {
+             if (!window.Alpine || !$store.perf.lowData) {
+               let start = null;
+               const step = (timestamp) => {
+                 if (!start) start = timestamp;
+                 const progress = Math.min((timestamp - start) / 1200, 1);
+                 this.count = (progress * this.targetAverage).toFixed(1);
+                 if (progress < 1) window.requestAnimationFrame(step);
+               };
+               window.requestAnimationFrame(step);
+               if (this.targetAverage >= 70 && window.triggerCelebration) {
+                 setTimeout(() => window.triggerCelebration(), 500);
+               }
+             } else {
+               this.count = this.targetAverage;
+             }
+           }
+         }"
+         class="aurora-mesh text-white rounded-3xl p-6 sm:p-8 shadow-2xl border border-white/20 relative overflow-hidden flex flex-col sm:flex-row justify-between items-center gap-6">
+      
+      <!-- Motif watermark -->
+      <div class="absolute -right-8 -bottom-8 text-9xl opacity-10 select-none">🏅</div>
+
+      <div class="z-10">
+        <span class="px-3.5 py-1 bg-white/15 backdrop-blur-md text-sky-200 rounded-full text-xs font-black uppercase tracking-widest border border-white/20">
+          Terminal Academic Profile
+        </span>
+        <h2 class="text-3xl font-black mt-2 text-white tracking-tight">{{ student.user.get_full_name }}</h2>
+        <p class="text-xs text-sky-200/90 mt-1 font-medium">
+          Class: <strong class="text-white">{{ student.current_arm }}</strong> &bull; 
+          Adm No: <strong class="text-white font-mono">{{ student.admission_number }}</strong>
+          {% if student.department != 'NONE' %}
+            &bull; Department: <strong class="text-amber-300">{{ student.get_department_display }}</strong>
+          {% endif %}
+        </p>
+      </div>
+
+      <div class="flex items-center space-x-6 text-center z-10">
+        <div class="bg-white/10 backdrop-blur-md px-5 py-3 rounded-2xl border border-white/15">
+          <p class="text-[10px] uppercase font-bold text-sky-200 tracking-wider">Overall Average</p>
+          <div class="text-3xl font-black font-mono text-emerald-400 mt-0.5">
+            <span x-text="count"></span>%
+          </div>
+        </div>
+
+        {% if summary.class_position %}
+          <div class="{% if summary.class_position <= 3 %}gold-foil{% else %}bg-white/10 border border-white/15 text-white{% endif %} px-5 py-3 rounded-2xl shadow-lg">
+            <p class="text-[10px] uppercase font-black tracking-wider">Class Rank</p>
+            <div class="text-3xl font-black font-mono mt-0.5">
+              {{ summary.class_position }}<span class="text-xs font-bold opacity-75">/{{ summary.out_of }}</span>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Printable Official A4 Report Sheet with Anti-Counterfeiting Guilloche Border -->
+  <div class="w-full max-w-4xl bg-white rounded-3xl p-6 sm:p-10 shadow-2xl text-slate-900 relative guilloche-border">
+    
+    <!-- Decorative Corner Rosettes -->
+    <div class="corner-rosette corner-tl"></div>
+    <div class="corner-rosette corner-tr"></div>
+    <div class="corner-rosette corner-bl"></div>
+    <div class="corner-rosette corner-br"></div>
+
+    <!-- Top Action Bar (No-Print) -->
+    <div class="no-print flex justify-between items-center pb-6 mb-6 border-b border-slate-200">
+      <a href="{% url 'portal:dashboard' %}" class="text-xs font-bold text-slate-600 hover:text-slate-900">
+        &larr; Back to Portal
+      </a>
+      <div class="flex items-center space-x-3">
+        <a href="{% url 'results:report-card-pdf' term_session.id student.id %}" target="_blank"
+           class="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold shadow-md transition-all">
+          Download PDF
+        </a>
+        <button onclick="window.print()"
+                class="px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-xl text-xs font-bold shadow-md transition-all">
+          Print
+        </button>
+      </div>
+    </div>
+
+    <!-- Official School Header -->
+    <div class="text-center pb-6 border-b-2 border-slate-900 relative">
+      <!-- Watermark Stamp in Corner -->
+      <div class="hidden sm:block absolute right-0 top-0">
+        <span class="rubber-stamp stamp-cleared text-[10px]">
+          OFFICIAL &bull; RECORD
+        </span>
+      </div>
+
+      <div class="flex items-center justify-center space-x-4 mb-3">
+        <img src="/static/img/cali_logo.png" alt="CALI Schools Crest" class="w-18 h-18 object-contain">
+        <div class="text-left">
+          <h1 class="text-2xl font-black tracking-tight text-slate-900 uppercase leading-none font-serif-honor">
+            CALI COLLEGE & SECONDARY SCHOOL
+          </h1>
+          <p class="text-xs font-extrabold text-slate-700 tracking-wider mt-1.5">
+            BASIC & SENIOR SECONDARY EDUCATION &bull; WAEC / NECO ACCREDITED CENTRE
+          </p>
+          <p class="text-[11px] text-slate-500 font-medium">Victoria Island Annex, Lagos, Nigeria &bull; principal@calischools.ng</p>
+        </div>
+      </div>
+      <div class="inline-block px-5 py-1.5 bg-slate-900 text-white rounded-full text-xs font-black tracking-widest uppercase shadow-sm">
+        OFFICIAL TERMINAL REPORT SHEET &bull; {{ term_session.get_term_display|upper }} ({{ term_session.session.name }})
+      </div>
+    </div>
+
+    <!-- Student Metadata Grid -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 p-4 bg-slate-50/90 rounded-2xl my-6 border border-slate-200 text-xs">
+      <div>
+        <p class="text-slate-500 font-semibold uppercase text-[10px]">Student Full Name</p>
+        <p class="font-extrabold text-slate-900 text-sm mt-0.5">{{ student.user.get_full_name }}</p>
+      </div>
+      <div>
+        <p class="text-slate-500 font-semibold uppercase text-[10px]">Admission Number</p>
+        <p class="font-mono font-extrabold text-slate-900 text-sm mt-0.5">{{ student.admission_number }}</p>
+      </div>
+      <div>
+        <p class="text-slate-500 font-semibold uppercase text-[10px]">Class & Department</p>
+        <p class="font-extrabold text-slate-900 text-sm mt-0.5">
+          {{ student.current_arm }} {% if student.department != 'NONE' %}({{ student.get_department_display }}){% endif %}
+        </p>
+      </div>
+      <div>
+        <p class="text-slate-500 font-semibold uppercase text-[10px]">Overall Term Average</p>
+        <p class="font-extrabold text-slate-900 text-sm mt-0.5">
+          {{ summary.average }}% {% if summary.class_position %}(Rank: {{ summary.class_position }}/{{ summary.out_of }}){% endif %}
+        </p>
+      </div>
+    </div>
+
+    <!-- Secondary Subject Grade Table (WAEC Standard) -->
+    <div class="mb-6 relative">
+      <table class="w-full text-left border border-slate-200 text-xs rounded-xl overflow-hidden shadow-sm">
+        <thead class="bg-slate-900 text-white font-black text-[11px] uppercase tracking-wider">
+          <tr>
+            <th class="py-2.5 px-3">Subject</th>
+            <th class="py-2.5 px-2 text-center">CA 1 ({{ level_group.ca1_max }})</th>
+            <th class="py-2.5 px-2 text-center">CA 2 ({{ level_group.ca2_max }})</th>
+            <th class="py-2.5 px-2 text-center">Exam ({{ level_group.exam_max }})</th>
+            <th class="py-2.5 px-2 text-center font-mono font-bold">Total (100)</th>
+            <th class="py-2.5 px-2 text-center">Grade</th>
+            <th class="py-2.5 px-2 text-center">Pos</th>
+            <th class="py-2.5 px-3">Official Remark</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-200 bg-white">
+          {% for score in scores %}
+            <tr class="hover:bg-slate-50/80 transition-colors">
+              <td class="py-2.5 px-3 font-bold text-slate-800">{{ score.score_sheet.subject.name }}</td>
+              <td class="py-2.5 px-2 text-center font-mono">{{ score.ca1 }}</td>
+              <td class="py-2.5 px-2 text-center font-mono">{{ score.ca2 }}</td>
+              <td class="py-2.5 px-2 text-center font-mono">{{ score.exam }}</td>
+              <td class="py-2.5 px-2 text-center font-mono font-black text-slate-900 bg-slate-50/50">{{ score.total }}</td>
+              <td class="py-2.5 px-2 text-center font-black">
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold shadow-sm
+                  {% if score.grade in 'A1,B2,B3' %}bg-emerald-100 text-emerald-900 border border-emerald-300
+                  {% elif score.grade in 'C4,C5,C6' %}bg-blue-100 text-blue-900 border border-blue-300
+                  {% elif score.grade in 'D7,E8' %}bg-amber-100 text-amber-900 border border-amber-300
+                  {% else %}bg-rose-100 text-rose-900 border border-rose-300{% endif %}">
+                  {{ score.grade }}
+                </span>
+              </td>
+              <td class="py-2.5 px-2 text-center font-mono text-[11px] text-slate-500 font-bold">
+                {{ score.subject_position|default:"-" }}
+              </td>
+              <td class="py-2.5 px-3 text-[11px] text-slate-600 font-medium">{{ score.remark }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- WAEC Grade Scale Legend Strip -->
+    <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 text-[10px] text-slate-600 flex flex-wrap justify-between items-center mb-6 font-mono">
+      <span class="font-bold text-slate-900 uppercase">WAEC Scale:</span>
+      <span>A1 (75-100% Excellent)</span>
+      <span>B2 (70-74% V.Good)</span>
+      <span>B3 (65-69% Good)</span>
+      <span>C4-C6 (50-64% Credit)</span>
+      <span>D7-E8 (40-49% Pass)</span>
+      <span>F9 (0-39% Fail)</span>
+    </div>
+
+    <!-- Remarks & Principal's Seal Section -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 text-xs">
+      <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col justify-between">
+        <div>
+          <p class="font-black text-slate-900 uppercase text-[10px] tracking-wider">House Master / Class Teacher's Remark</p>
+          <p class="mt-2 text-slate-700 italic leading-relaxed">
+            "{{ summary.class_teacher_remark|default:'A determined student with good analytical aptitude. Encouraged to sustain focus in quantitative subjects.' }}"
+          </p>
+        </div>
+        <p class="mt-4 text-[10px] text-slate-400 font-semibold border-t border-slate-200 pt-2">Recorded & Certified</p>
+      </div>
+
+      <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col justify-between relative">
+        <div>
+          <p class="font-black text-slate-900 uppercase text-[10px] tracking-wider">Principal's Decision & Authentication</p>
+          <p class="mt-2 text-slate-700 italic leading-relaxed">
+            "{{ summary.head_teacher_remark|default:'Approved academic standing. Ready for the next stage of secondary studies.' }}"
+          </p>
+        </div>
+
+        <div class="mt-4 flex justify-between items-end border-t border-slate-200 pt-2 text-[10px] text-slate-600 font-semibold">
+          <span>Resumption: <strong class="text-slate-900">{{ term_session.next_term_resumption|date:"d M, Y"|default:"TBA" }}</strong></span>
+          <div class="text-right">
+            <span class="font-serif-honor font-bold text-slate-900 text-xs block">Dr. O. A. Cali</span>
+            <span class="text-[9px] text-slate-400 uppercase tracking-wider">Principal / Seal</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

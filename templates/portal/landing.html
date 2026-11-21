@@ -1,0 +1,189 @@
+{% extends 'base.html' %}
+{% block title %}CALI Schools | Terminal Result Portal{% endblock %}
+
+{% block content %}
+<div x-data="{ lowData: $store.perf.lowData, activeTab: 'parent' }" 
+     class="min-h-screen aurora-mesh text-white flex flex-col justify-between relative overflow-hidden">
+
+  <!-- Subtle Geometric Pattern Overlay -->
+  <div class="absolute inset-0 ankara-pattern pointer-events-none"></div>
+
+  <!-- Background Floating Academic Motifs (Pure CSS, Low-overhead) -->
+  <template x-if="!lowData">
+    <div class="absolute inset-0 pointer-events-none overflow-hidden select-none" aria-hidden="true">
+      <div class="absolute top-20 left-[10%] text-5xl opacity-20 animate-float-slow">🎓</div>
+      <div class="absolute top-1/3 right-[12%] text-6xl opacity-15 animate-float-reverse">📚</div>
+      <div class="absolute bottom-28 left-[15%] text-5xl opacity-20 animate-float-slow" style="animation-delay: -3s;">🔬</div>
+      <div class="absolute bottom-1/4 right-[20%] text-5xl opacity-15 animate-float-reverse" style="animation-delay: -2s;">✏️</div>
+      <div class="absolute top-1/2 left-[5%] text-4xl opacity-15 animate-float-slow" style="animation-delay: -4s;">📐</div>
+    </div>
+  </template>
+
+  <!-- Top Navigation Bar: Crest, Title, Low-Data Toggle -->
+  <header class="p-6 flex justify-between items-center max-w-7xl mx-auto w-full z-20">
+    <div class="flex items-center space-x-3.5">
+      <div class="w-13 h-13 p-1.5 bg-white/95 rounded-2xl shadow-xl flex items-center justify-center border border-white/50 backdrop-blur-md">
+        <img src="/static/img/cali_logo.png" alt="CALI Schools Crest" class="w-10 h-10 object-contain">
+      </div>
+      <div>
+        <div class="flex items-center space-x-2">
+          <h1 class="font-black text-xl tracking-tight leading-none text-white">CALI SCHOOLS</h1>
+          <span class="px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+            Official Portal
+          </span>
+        </div>
+        <p class="text-xs text-sky-200/80 font-medium tracking-wide mt-0.5">Excellence • Integrity • Innovation</p>
+      </div>
+    </div>
+
+    <!-- Data-Saver Mode Pill -->
+    <button @click="$store.perf.toggle()" 
+            class="px-4 py-2 rounded-full text-xs font-bold backdrop-blur-xl border border-white/20 transition-all flex items-center space-x-2.5 shadow-lg active:scale-95"
+            :class="lowData ? 'bg-amber-400 text-slate-950 border-amber-300' : 'bg-white/10 text-white hover:bg-white/20'">
+      <span class="w-2.5 h-2.5 rounded-full" :class="lowData ? 'bg-black' : 'bg-emerald-400 animate-pulse'"></span>
+      <span x-text="lowData ? 'Low-Data Mode Active' : 'Data-Saver Mode'"></span>
+    </button>
+  </header>
+
+  <!-- Main Login Card with Iridescent Aura -->
+  <main class="w-full max-w-md mx-auto px-6 py-4 z-20">
+    <div class="iridescent-border p-1 shadow-2xl">
+      <div class="glass-panel text-slate-900 rounded-[1.65rem] p-8 sm:p-9 animate-fade-up">
+        
+        <div class="text-center mb-6">
+          <div class="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-tr from-sky-600 to-emerald-500 text-white mb-3 shadow-lg shadow-sky-600/20">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/>
+            </svg>
+          </div>
+          <h2 class="text-2xl font-black tracking-tight text-slate-900">Result Checker</h2>
+          <p class="text-xs text-slate-500 mt-1">
+            {% if current_term %}
+              Session: <strong class="text-slate-700">{{ current_term.session.name }}</strong> &bull; <span class="font-bold text-sky-700">{{ current_term.get_term_display }}</span>
+            {% else %}
+              Multi-Level Access for All CALI Pupils & Students
+            {% endif %}
+          </p>
+        </div>
+
+        <!-- Role Tab Switcher -->
+        <div class="flex bg-slate-100/90 p-1 rounded-2xl mb-6 border border-slate-200">
+          <button @click="activeTab = 'parent'" 
+                  :class="activeTab === 'parent' ? 'bg-white shadow text-slate-950' : 'text-slate-600 hover:text-slate-900'"
+                  class="flex-1 py-2 text-xs font-bold rounded-xl transition-all">
+            Parent / Pupil
+          </button>
+          <button @click="activeTab = 'staff'" 
+                  :class="activeTab === 'staff' ? 'bg-white shadow text-slate-950' : 'text-slate-600 hover:text-slate-900'"
+                  class="flex-1 py-2 text-xs font-bold rounded-xl transition-all">
+            Staff Portal
+          </button>
+        </div>
+
+        <!-- Parent/Student Form -->
+        <form x-show="activeTab === 'parent'" method="POST" action="{% url 'portal:login' %}" class="space-y-4">
+          {% csrf_token %}
+          <div>
+            <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-1.5">
+              Admission No. or Registered Phone
+            </label>
+            <div class="relative">
+              <input type="text" name="username" required placeholder="e.g. 08031234567 or CALI/2026/001"
+                     class="w-full px-4 py-3 bg-white rounded-xl border border-slate-200 text-sm font-semibold text-slate-800 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 focus:outline-none transition-all shadow-sm">
+            </div>
+          </div>
+
+          <div x-data="{ showPin: false }">
+            <div class="flex justify-between items-center mb-1.5">
+              <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider">
+                6-Digit Access PIN
+              </label>
+              <button type="button" @click="showPin = !showPin"
+                      class="text-xs text-sky-700 hover:text-sky-900 font-bold flex items-center space-x-1 focus:outline-none">
+                <span x-text="showPin ? 'Hide PIN' : 'Show PIN'"></span>
+              </button>
+            </div>
+            <div class="relative">
+              <input :type="showPin ? 'text' : 'password'" name="password" maxlength="6" required placeholder="••••••"
+                     class="w-full px-4 py-3 bg-white text-center tracking-[0.35em] text-lg font-mono font-bold rounded-xl border border-slate-200 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 focus:outline-none transition-all shadow-sm pr-11">
+              <button type="button" @click="showPin = !showPin"
+                      class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 focus:outline-none"
+                      aria-label="Toggle PIN visibility">
+                <svg x-show="!showPin" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                </svg>
+                <svg x-show="showPin" x-cloak class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <button type="submit" 
+                  class="w-full py-3.5 bg-gradient-to-r from-sky-600 via-teal-600 to-emerald-600 text-white font-black rounded-xl text-sm shadow-xl shadow-sky-600/25 hover:opacity-95 transition-all transform active:scale-[0.98] flex items-center justify-center space-x-2">
+            <span>Access Terminal Report</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+            </svg>
+          </button>
+        </form>
+
+        <!-- Staff Form -->
+        <form x-show="activeTab === 'staff'" x-cloak method="POST" action="{% url 'portal:login' %}" class="space-y-4">
+          {% csrf_token %}
+          <div>
+            <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-1.5">Staff Email</label>
+            <input type="email" name="username" required placeholder="teacher@calischools.ng"
+                   class="w-full px-4 py-3 bg-white rounded-xl border border-slate-200 text-sm font-semibold text-slate-800 focus:ring-2 focus:ring-sky-500 focus:outline-none transition-all shadow-sm">
+          </div>
+
+          <div x-data="{ showPass: false }">
+            <div class="flex justify-between items-center mb-1.5">
+              <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider">Password</label>
+              <button type="button" @click="showPass = !showPass"
+                      class="text-xs text-sky-700 hover:text-sky-900 font-bold flex items-center space-x-1 focus:outline-none">
+                <span x-text="showPass ? 'Hide' : 'Show'"></span>
+              </button>
+            </div>
+            <div class="relative">
+              <input :type="showPass ? 'text' : 'password'" name="password" required placeholder="••••••••"
+                     class="w-full px-4 py-3 bg-white rounded-xl border border-slate-200 text-sm font-semibold text-slate-800 focus:ring-2 focus:ring-sky-500 focus:outline-none transition-all shadow-sm pr-11">
+              <button type="button" @click="showPass = !showPass"
+                      class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 focus:outline-none"
+                      aria-label="Toggle Password visibility">
+                <svg x-show="!showPass" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                </svg>
+                <svg x-show="showPass" x-cloak class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <button type="submit" 
+                  class="w-full py-3.5 bg-slate-900 text-white font-black rounded-xl text-sm hover:bg-slate-800 transition-all transform active:scale-[0.98] flex items-center justify-center space-x-2 shadow-xl shadow-slate-900/30">
+            <span>Open Staff Gradebook</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+            </svg>
+          </button>
+        </form>
+
+        <div class="mt-6 pt-5 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
+          <span>🔒 256-Bit SSL Encrypted</span>
+          <span>NDPA 2023 Compliant</span>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="p-6 text-center text-xs text-sky-200/70 z-20">
+    &copy; 2026 CALI Schools Nigeria. All rights reserved.
+  </footer>
+</div>
+{% endblock %}

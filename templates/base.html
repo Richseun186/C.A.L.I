@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}CALI Schools Portal{% endblock %}</title>
+
+  <!-- Tailwind CSS CDN (with custom theme extensions) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            cali: {
+              navy: '#0f172a',
+              emerald: '#10b981',
+              gold: '#f59e0b',
+              sky: '#0284c7',
+              coral: '#f43f5e'
+            }
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-10px)' },
+            },
+            fadeUp: {
+              '0%': { opacity: '0', transform: 'translateY(16px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' },
+            },
+            pulseSoft: {
+              '0%, 100%': { opacity: '1' },
+              '50%': { opacity: '0.6' }
+            }
+          },
+          animation: {
+            float: 'float 4s ease-in-out infinite',
+            'fade-up': 'fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+            'pulse-soft': 'pulseSoft 3s ease-in-out infinite'
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="/static/css/output.css">
+
+  <!-- HTMX & Alpine.js -->
+  <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+  <script defer src="https://unpkg.com/alpinejs@3.13.10/dist/cdn.min.js"></script>
+
+  <!-- Lazy-loaded celebration & perf script -->
+  <script src="/static/js/lazy-celebration.js"></script>
+
+  {% block extra_head %}{% endblock %}
+</head>
+<body class="h-full bg-slate-50 text-slate-900 antialiased font-sans flex flex-col"
+      hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+
+  <!-- Toast Messages Container -->
+  {% if messages %}
+    <div class="fixed top-5 right-5 z-50 flex flex-col space-y-2 max-w-sm" x-data="{ show: true }" x-show="show">
+      {% for message in messages %}
+        <div class="px-4 py-3 rounded-2xl shadow-lg border text-xs font-semibold flex items-center justify-between space-x-3
+                    {% if message.tags == 'error' %}bg-rose-50 border-rose-200 text-rose-800
+                    {% elif message.tags == 'success' %}bg-emerald-50 border-emerald-200 text-emerald-800
+                    {% else %}bg-sky-50 border-sky-200 text-sky-800{% endif %}">
+          <span>{{ message }}</span>
+          <button @click="show = false" class="text-slate-400 hover:text-slate-600">&times;</button>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <!-- Page Content -->
+  <div class="flex-1 flex flex-col">
+    {% block content %}{% endblock %}
+  </div>
+
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

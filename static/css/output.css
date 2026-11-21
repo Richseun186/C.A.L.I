@@ -1,0 +1,235 @@
+/* CALI Schools Portal Premium Bespoke Stylesheet */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=JetBrains+Mono:wght@400;600;700&family=Cinzel:wght@700;900&display=swap');
+
+*, ::before, ::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border-width: 0;
+  border-style: solid;
+  border-color: #e2e8f0;
+}
+
+html {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  min-height: 100vh;
+  color: #0f172a;
+  background-color: #f8fafc;
+}
+
+.font-serif-honor {
+  font-family: 'Cinzel', Georgia, serif;
+}
+
+/* =========================================================
+   1. ANIMATED AURORA MESH & ANKARA GEOMETRIC BACKGROUNDS
+   ========================================================= */
+.aurora-mesh {
+  background: radial-gradient(at 0% 0%, rgba(2, 132, 199, 0.28) 0px, transparent 50%),
+              radial-gradient(at 100% 0%, rgba(16, 185, 129, 0.22) 0px, transparent 50%),
+              radial-gradient(at 100% 100%, rgba(245, 158, 11, 0.18) 0px, transparent 50%),
+              radial-gradient(at 0% 100%, rgba(99, 102, 241, 0.22) 0px, transparent 50%),
+              #090d16;
+  background-size: 140% 140%;
+  animation: meshFlow 14s ease-in-out infinite alternate;
+}
+
+@keyframes meshFlow {
+  0% { background-position: 0% 0%; }
+  50% { background-position: 100% 100%; }
+  100% { background-position: 50% 0%; }
+}
+
+/* Subtle Geometric Diamond Watermark */
+.ankara-pattern {
+  background-image: radial-gradient(#38bdf8 0.75px, transparent 0.75px),
+                    radial-gradient(#38bdf8 0.75px, transparent 0.75px);
+  background-size: 30px 30px;
+  background-position: 0 0, 15px 15px;
+  opacity: 0.12;
+}
+
+/* =========================================================
+   2. GLASSMORPHISM & IRIDESCENT SHIMMER BORDER
+   ========================================================= */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.12),
+              0 0 0 1px rgba(255, 255, 255, 0.5) inset;
+}
+
+.dark-glass-panel {
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+}
+
+.iridescent-border {
+  position: relative;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.85));
+  border-radius: 1.75rem;
+}
+
+.iridescent-border::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 1.85rem;
+  background: linear-gradient(60deg, #38bdf8, #34d399, #fbbf24, #f43f5e, #38bdf8);
+  background-size: 300% 300%;
+  z-index: -1;
+  animation: borderGlow 8s linear infinite;
+}
+
+@keyframes borderGlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* =========================================================
+   3. METALLIC GOLD FOIL & HONORS ACCENTS
+   ========================================================= */
+.gold-foil {
+  background: linear-gradient(135deg, #bf953f 0%, #fcf6ba 25%, #b38728 50%, #fbf5b7 75%, #aa771c 100%);
+  color: #553c06;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
+  box-shadow: 0 4px 14px 0 rgba(191, 149, 63, 0.35);
+}
+
+.gold-badge {
+  background: linear-gradient(135deg, #d4af37, #f7e089, #c59b27);
+  box-shadow: 0 2px 8px rgba(212, 175, 55, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+}
+
+/* =========================================================
+   4. OFFICIAL RUBBER STAMP SIMULATION (FEES & SEALS)
+   ========================================================= */
+.rubber-stamp {
+  display: inline-block;
+  padding: 0.35rem 1rem;
+  text-transform: uppercase;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 800;
+  border-radius: 0.5rem;
+  letter-spacing: 0.15em;
+  mask-image: radial-gradient(circle, rgba(0,0,0,1) 85%, rgba(0,0,0,0.6) 100%);
+  box-shadow: 0 0 0 2px currentColor;
+}
+
+.stamp-cleared {
+  color: #059669;
+  border: 3px double #059669;
+  transform: rotate(-7deg);
+  background: rgba(16, 185, 129, 0.08);
+}
+
+.stamp-locked {
+  color: #dc2626;
+  border: 3px double #dc2626;
+  transform: rotate(5deg);
+  background: rgba(239, 68, 68, 0.08);
+}
+
+/* =========================================================
+   5. ANTI-COUNTERFEITING GUILLOCHE BORDER (REPORT CARDS)
+   ========================================================= */
+.guilloche-border {
+  border: 4px double #0f172a;
+  outline: 1px solid #cbd5e1;
+  outline-offset: -7px;
+  position: relative;
+}
+
+.guilloche-border::after {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  right: 4px;
+  bottom: 4px;
+  border: 1px dashed rgba(2, 132, 199, 0.3);
+  pointer-events: none;
+}
+
+/* Corner Rosettes */
+.corner-rosette {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid #0f172a;
+  background: #ffffff;
+}
+.corner-tl { top: -9px; left: -9px; }
+.corner-tr { top: -9px; right: -9px; }
+.corner-bl { bottom: -9px; left: -9px; }
+.corner-br { bottom: -9px; right: -9px; }
+
+/* =========================================================
+   6. MICRO-INTERACTIONS & SHIMMER EFFECTS
+   ========================================================= */
+.shimmer-cell {
+  position: relative;
+  overflow: hidden;
+}
+
+.shimmer-cell::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0; bottom: 0; left: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.25), transparent);
+  animation: sweep 1.5s ease-out;
+}
+
+@keyframes sweep {
+  100% { transform: translateX(100%); }
+}
+
+@keyframes floatSoft {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-12px) rotate(2deg); }
+}
+
+.animate-float-slow {
+  animation: floatSoft 5s ease-in-out infinite;
+}
+
+.animate-float-reverse {
+  animation: floatSoft 6s ease-in-out infinite reverse;
+}
+
+/* =========================================================
+   7. PRINT OPTIMIZATION
+   ========================================================= */
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+  .no-print, .aurora-mesh, .iridescent-border::before {
+    display: none !important;
+  }
+  .glass-panel {
+    background: #ffffff !important;
+    backdrop-filter: none !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+  .guilloche-border {
+    border: 3px double #000000 !important;
+    outline: 1px solid #000000 !important;
+  }
+}

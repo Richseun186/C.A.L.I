@@ -1,0 +1,29 @@
+# Render Blueprint for CALI Schools Portal
+services:
+  - type: web
+    name: cali-schools-portal
+    env: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    region: frankfurt # Frankfurt or London gives fastest low-ping latency to Lagos, Nigeria
+    autoDeploy: true
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: config.settings.production
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: cali-database
+          property: connectionString
+      - key: PAYSTACK_PUBLIC_KEY
+        value: pk_test_cali_demo_key
+      - key: PAYSTACK_SECRET_KEY
+        value: sk_test_cali_demo_key
+
+databases:
+  - name: cali-database
+    databaseName: cali_db
+    user: cali_admin
+    plan: free
+    region: frankfurt

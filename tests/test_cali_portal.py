@@ -116,3 +116,62 @@ class CaliPortalTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Terminal Result Locked")
         self.assertContains(response, "80000.00")
+
+    def test_student_and_class_directories_accessible_by_admin(self):
+        """Tests that administrators can access both Student and Class directories"""
+        admin_user = User.objects.create_user(
+            username='admin@calischools.ng', email='admin@calischools.ng', role='SUPER_ADMIN', is_staff=True
+        )
+        admin_user.set_password('AdminPass123!')
+        admin_user.save()
+
+        self.client.force_login(admin_user)
+
+        # 1. Test student directory
+        res_students = self.client.get(reverse('portal:students'))
+        self.assertEqual(res_students.status_code, 200)
+        self.assertContains(res_students, "Enrolled Students & Pupils")
+        self.assertContains(res_students, "CALI/2026/999")
+        self.assertContains(res_students, "Tunde Bakare")
+
+        # 2. Test class directory
+        res_classes = self.client.get(reverse('portal:classes'))
+        self.assertEqual(res_classes.status_code, 200)
+        self.assertContains(res_classes, "Academic Classes & Arms")
+        self.assertContains(res_classes, "SS 1")
+
+        # 3. Test admin dashboard has student roster and clickable stat links
+        res_dash = self.client.get(reverse('portal:dashboard'))
+        self.assertEqual(res_dash.status_code, 200)
+        self.assertContains(res_dash, reverse('portal:students'))
+        self.assertContains(res_dash, reverse('portal:classes'))
+
+    def test_admin_bypasses_fee_paywall_for_inspection(self):
+        """Tests that school admin can inspect report card even if fees are unpaid"""
+        admin_user = User.objects.create_user(
+            username='principal@calischools.ng', email='principal@calischools.ng', role='PRINCIPAL', is_staff=True
+        )
+        admin_user.set_password('AdminPass123!')
+        admin_user.save()
+
+        # Fee unpaid
+        StudentFeeStatus.objects.get_or_create(
+            student=self.student, term_session=self.term_session,
+            defaults={
+                'total_billed': Decimal('100000.00'),
+                'total_paid': Decimal('0.00'),
+                'balance': Decimal('100000.00'),
+                'has_cleared_fees': False
+            }
+        )
+
+        self.client.force_login(admin_user)
+        url = reverse('results:view-report', kwargs={
+            'term_session_id': self.term_session.id,
+            'student_id': self.student.id
+        })
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        # Should not be locked with paywall
+        self.assertNotContains(response, "Terminal Result Locked")
+        self.assertContains(response, "CALI/2026/999")

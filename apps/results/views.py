@@ -29,18 +29,24 @@ def view_or_download_report_card(request, term_session_id, student_id, format='h
     elif request.user.role == 'STUDENT' and request.user != student.user:
         return HttpResponseForbidden("Unauthorized access.")
 
-    # 2. Strict School Fees Gate
+    # 2. Strict School Fees Gate (Parents/Students paywalled; Staff/Admin can inspect)
     fee_status = StudentFeeStatus.objects.filter(
         student=student, term_session=term_session
     ).first()
 
-    if not fee_status or not fee_status.has_cleared_fees:
-        return render(request, 'portal/fee_paywall.html', {
-            'student': student,
-            'term_session': term_session,
-            'fee_status': fee_status,
-            'paystack_public_key': getattr(settings, 'PAYSTACK_PUBLIC_KEY', '')
-        })
+    is_staff_or_admin = (
+        request.user.is_staff or 
+        request.user.role in ['SUPER_ADMIN', 'PROPRIETOR', 'PRINCIPAL', 'HEADMISTRESS', 'EXAM_OFFICER', 'CLASS_TEACHER', 'SUBJECT_TEACHER']
+    )
+
+    if not is_staff_or_admin:
+        if not fee_status or not fee_status.has_cleared_fees:
+            return render(request, 'portal/fee_paywall.html', {
+                'student': student,
+                'term_session': term_session,
+                'fee_status': fee_status,
+                'paystack_public_key': getattr(settings, 'PAYSTACK_PUBLIC_KEY', '')
+            })
 
     # 3. Retrieve Result Data
     scores = StudentScore.objects.filter(

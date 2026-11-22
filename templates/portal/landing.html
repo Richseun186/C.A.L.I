@@ -8,8 +8,8 @@
   <!-- Subtle Geometric Pattern Overlay -->
   <div class="absolute inset-0 ankara-pattern pointer-events-none"></div>
 
-  <!-- Large Circular Moving Object: Upper Right -->
-  <div class="celestial-orb orb-upper-right hidden sm:block" aria-hidden="true">
+  <!-- Large Circular Moving Object: Upper Right (Responsive for Mobile & Desktop) -->
+  <div class="celestial-orb orb-upper-right" aria-hidden="true">
     <!-- Atmospheric Radial Glow -->
     <div class="absolute inset-0 rounded-full bg-gradient-to-br from-sky-400/25 via-emerald-400/20 to-transparent blur-3xl"></div>
     <!-- Outer Dashed Cyan Orbit Track -->
@@ -22,12 +22,12 @@
     </div>
     <!-- Central Glassmorphic Holographic Core -->
     <div class="absolute inset-[28%] rounded-full bg-gradient-to-tr from-cyan-500/20 via-sky-300/30 to-emerald-400/20 backdrop-blur-md border border-cyan-300/30 shadow-[0_0_50px_rgba(56,189,248,0.25)] flex items-center justify-center">
-      <div class="w-16 h-16 rounded-full bg-white/10 border border-white/40 animate-pulse-soft"></div>
+      <div class="w-12 sm:w-16 h-12 sm:h-16 rounded-full bg-white/10 border border-white/40 animate-pulse-soft"></div>
     </div>
   </div>
 
-  <!-- Large Circular Moving Object: Lower Left -->
-  <div class="celestial-orb orb-lower-left hidden sm:block" aria-hidden="true">
+  <!-- Large Circular Moving Object: Lower Left (Responsive for Mobile & Desktop) -->
+  <div class="celestial-orb orb-lower-left" aria-hidden="true">
     <!-- Atmospheric Radial Glow -->
     <div class="absolute inset-0 rounded-full bg-gradient-to-tr from-amber-400/25 via-rose-500/18 to-transparent blur-3xl"></div>
     <!-- Outer Dashed Gold Orbit Track -->
@@ -40,7 +40,7 @@
     </div>
     <!-- Central Glassmorphic Holographic Core -->
     <div class="absolute inset-[30%] rounded-full bg-gradient-to-tr from-amber-500/20 via-orange-400/20 to-rose-400/20 backdrop-blur-md border border-amber-300/30 shadow-[0_0_50px_rgba(245,158,11,0.25)] flex items-center justify-center">
-      <div class="w-20 h-20 rounded-full bg-white/10 border border-white/40 animate-pulse-soft"></div>
+      <div class="w-14 sm:w-20 h-14 sm:h-20 rounded-full bg-white/10 border border-white/40 animate-pulse-soft"></div>
     </div>
   </div>
 
@@ -56,11 +56,11 @@
   </template>
 
   <!-- Top Navigation Bar: Crest with Circular Kinetic Typography, Title, Low-Data Toggle -->
-  <header class="p-6 flex justify-between items-center max-w-7xl mx-auto w-full z-20">
-    <div class="flex items-center space-x-4">
+  <header class="px-4 py-3.5 sm:px-6 sm:py-5 flex justify-between items-center max-w-7xl mx-auto w-full z-20">
+    <div class="flex items-center space-x-3 sm:space-x-4">
       <!-- Crest with Circular Kinetic Typography Seal -->
-      <div class="relative w-14 h-14 flex items-center justify-center">
-        <svg class="spin-circular-text absolute inset-[-14px] w-[84px] h-[84px] text-[8.5px] font-extrabold uppercase tracking-[0.22em] fill-sky-200/90 pointer-events-none" viewBox="0 0 200 200">
+      <div class="relative w-12 sm:w-14 h-12 sm:h-14 flex items-center justify-center flex-shrink-0">
+        <svg class="spin-circular-text absolute inset-[-12px] sm:inset-[-14px] w-[72px] sm:w-[84px] h-[72px] sm:h-[84px] text-[7.5px] sm:text-[8.5px] font-extrabold uppercase tracking-[0.22em] fill-sky-200/90 pointer-events-none" viewBox="0 0 200 200">
           <path id="crestCirclePath" d="M 100, 100 m -70, 0 a 70,70 0 1,1 140,0 a 70,70 0 1,1 -140,0" fill="none" />
           <text>
             <textPath href="#crestCirclePath" startOffset="0%">
@@ -68,34 +68,67 @@
             </textPath>
           </text>
         </svg>
-        <div class="w-12 h-12 p-1.5 bg-white/95 rounded-2xl shadow-xl flex items-center justify-center border border-white/50 backdrop-blur-md relative z-10">
-          <img src="/static/img/cali_logo.png" alt="CALI Schools Crest" class="w-9 h-9 object-contain">
+        <div class="w-10 sm:w-12 h-10 sm:h-12 p-1 sm:p-1.5 bg-white/95 rounded-2xl shadow-xl flex items-center justify-center border border-white/50 backdrop-blur-md relative z-10">
+          <img src="/static/img/cali_logo.png" alt="CALI Schools Crest" class="w-8 sm:w-9 h-8 sm:h-9 object-contain">
         </div>
       </div>
       <div>
-        <div class="flex items-center space-x-2">
-          <h1 class="font-black text-xl tracking-tight leading-none text-white animate-circular-drift">CALI SCHOOLS</h1>
-          <span class="px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-            Official Portal
+        <div class="flex items-center space-x-1.5 sm:space-x-2">
+          <h1 class="font-black text-lg sm:text-xl tracking-tight leading-none text-white animate-circular-drift">CALI SCHOOLS</h1>
+          <span class="px-1.5 sm:px-2 py-0.5 rounded-full text-[8.5px] sm:text-[9px] font-extrabold uppercase bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+            Official
           </span>
         </div>
-        <p class="text-xs text-sky-200/80 font-medium tracking-wide mt-0.5 animate-circular-drift" style="animation-delay: -3.5s;">Excellence • Integrity • Innovation</p>
+        <p class="text-[11px] sm:text-xs text-sky-200/80 font-medium tracking-wide mt-0.5 animate-circular-drift" style="animation-delay: -3.5s;">Excellence • Integrity • Innovation</p>
       </div>
     </div>
 
     <!-- Data-Saver Mode Pill -->
     <button @click="$store.perf.toggle()" 
-            class="px-4 py-2 rounded-full text-xs font-bold backdrop-blur-xl border border-white/20 transition-all flex items-center space-x-2.5 shadow-lg active:scale-95"
+            class="px-3 sm:px-4 py-2 rounded-full text-[11px] sm:text-xs font-bold backdrop-blur-xl border border-white/20 transition-all flex items-center space-x-2 shadow-lg active:scale-95 min-h-[40px]"
             :class="lowData ? 'bg-amber-400 text-slate-950 border-amber-300' : 'bg-white/10 text-white hover:bg-white/20'">
-      <span class="w-2.5 h-2.5 rounded-full" :class="lowData ? 'bg-black' : 'bg-emerald-400 animate-pulse'"></span>
-      <span x-text="lowData ? 'Low-Data Mode Active' : 'Data-Saver Mode'"></span>
+      <span class="w-2 h-2 rounded-full" :class="lowData ? 'bg-black' : 'bg-emerald-400 animate-pulse'"></span>
+      <span x-text="lowData ? 'Low-Data' : 'Data-Saver'"></span>
     </button>
   </header>
 
   <!-- Main Login Card with Iridescent Aura & Orbiting Circular Write-ups -->
-  <main class="w-full max-w-md mx-auto px-6 py-4 z-20 relative">
+  <main class="w-full max-w-md mx-auto px-4 sm:px-6 py-2 sm:py-4 z-20 relative">
 
-    <!-- Circular Moving Write-ups (Orbiting in a circle around the main card) -->
+    <!-- Mobile Circulating Write-ups Ribbon (Smooth continuous loop for mobile devices) -->
+    <template x-if="!lowData">
+      <div class="lg:hidden w-full overflow-hidden py-1.5 mb-2 select-none" aria-hidden="true">
+        <div class="animate-marquee-circular space-x-2.5">
+          <div class="px-3 py-1.5 rounded-full bg-slate-900/80 backdrop-blur-md border border-cyan-400/40 text-cyan-200 text-[11px] font-bold flex items-center space-x-1.5 shadow-md">
+            <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
+            <span>✨ WAEC & NECO Standard Grading</span>
+          </div>
+          <div class="px-3 py-1.5 rounded-full bg-slate-900/80 backdrop-blur-md border border-emerald-400/40 text-emerald-200 text-[11px] font-bold flex items-center space-x-1.5 shadow-md">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span>📊 Real-Time Continuous Assessments</span>
+          </div>
+          <div class="px-3 py-1.5 rounded-full bg-slate-900/80 backdrop-blur-md border border-amber-400/40 text-amber-200 text-[11px] font-bold flex items-center space-x-1.5 shadow-md">
+            <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
+            <span>🔒 Cryptographic Tamper-Proof Seals</span>
+          </div>
+          <!-- Loop Duplication for seamless continuous circulation -->
+          <div class="px-3 py-1.5 rounded-full bg-slate-900/80 backdrop-blur-md border border-cyan-400/40 text-cyan-200 text-[11px] font-bold flex items-center space-x-1.5 shadow-md">
+            <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
+            <span>✨ WAEC & NECO Standard Grading</span>
+          </div>
+          <div class="px-3 py-1.5 rounded-full bg-slate-900/80 backdrop-blur-md border border-emerald-400/40 text-emerald-200 text-[11px] font-bold flex items-center space-x-1.5 shadow-md">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span>📊 Real-Time Continuous Assessments</span>
+          </div>
+          <div class="px-3 py-1.5 rounded-full bg-slate-900/80 backdrop-blur-md border border-amber-400/40 text-amber-200 text-[11px] font-bold flex items-center space-x-1.5 shadow-md">
+            <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
+            <span>🔒 Cryptographic Tamper-Proof Seals</span>
+          </div>
+        </div>
+      </div>
+    </template>
+
+    <!-- Desktop Circular Moving Write-ups (Orbiting outside the card perimeter) -->
     <template x-if="!lowData">
       <div class="absolute inset-0 pointer-events-none hidden lg:flex items-center justify-center overflow-visible select-none" aria-hidden="true">
         <div class="relative w-0 h-0">
@@ -127,16 +160,16 @@
     </template>
 
     <div class="iridescent-border p-1 shadow-2xl">
-      <div class="glass-panel text-slate-900 rounded-[1.65rem] p-8 sm:p-9 animate-fade-up">
+      <div class="glass-panel text-slate-900 rounded-[1.65rem] p-6 sm:p-9 animate-fade-up">
         
-        <div class="text-center mb-6">
-          <div class="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-tr from-sky-600 to-emerald-500 text-white mb-3 shadow-lg shadow-sky-600/20">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="text-center mb-5 sm:mb-6">
+          <div class="inline-flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-tr from-sky-600 to-emerald-500 text-white mb-2.5 sm:mb-3 shadow-lg shadow-sky-600/20">
+            <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"/>
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/>
             </svg>
           </div>
-          <h2 class="text-2xl font-black tracking-tight text-slate-900">Result Checker</h2>
+          <h2 class="text-xl sm:text-2xl font-black tracking-tight text-slate-900">Result Checker</h2>
           <p class="text-xs text-slate-500 mt-1">
             {% if current_term %}
               Session: <strong class="text-slate-700">{{ current_term.session.name }}</strong> &bull; <span class="font-bold text-sky-700">{{ current_term.get_term_display }}</span>
@@ -147,15 +180,15 @@
         </div>
 
         <!-- Role Tab Switcher -->
-        <div class="flex bg-slate-100/90 p-1 rounded-2xl mb-6 border border-slate-200">
+        <div class="flex bg-slate-100/90 p-1 rounded-2xl mb-5 sm:mb-6 border border-slate-200">
           <button @click="activeTab = 'parent'" 
-                  :class="activeTab === 'parent' ? 'bg-white shadow text-slate-950' : 'text-slate-600 hover:text-slate-900'"
-                  class="flex-1 py-2 text-xs font-bold rounded-xl transition-all">
+                  :class="activeTab === 'parent' ? 'bg-white shadow text-slate-950 font-black' : 'text-slate-600 hover:text-slate-900 font-bold'"
+                  class="flex-1 py-2.5 text-xs rounded-xl transition-all min-h-[42px] flex items-center justify-center">
             Parent / Pupil
           </button>
           <button @click="activeTab = 'staff'" 
-                  :class="activeTab === 'staff' ? 'bg-white shadow text-slate-950' : 'text-slate-600 hover:text-slate-900'"
-                  class="flex-1 py-2 text-xs font-bold rounded-xl transition-all">
+                  :class="activeTab === 'staff' ? 'bg-white shadow text-slate-950 font-black' : 'text-slate-600 hover:text-slate-900 font-bold'"
+                  class="flex-1 py-2.5 text-xs rounded-xl transition-all min-h-[42px] flex items-center justify-center">
             Staff Portal
           </button>
         </div>
@@ -169,7 +202,8 @@
             </label>
             <div class="relative">
               <input type="text" name="username" required placeholder="e.g. 08031234567 or CALI/2026/001"
-                     class="w-full px-4 py-3 bg-white rounded-xl border border-slate-200 text-sm font-semibold text-slate-800 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 focus:outline-none transition-all shadow-sm">
+                     autocomplete="username" autocapitalize="none"
+                     class="w-full px-4 py-3.5 bg-white rounded-xl border border-slate-200 text-base sm:text-sm font-semibold text-slate-800 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 focus:outline-none transition-all shadow-sm min-h-[48px]">
             </div>
           </div>
 
@@ -179,15 +213,16 @@
                 6-Digit Access PIN
               </label>
               <button type="button" @click="showPin = !showPin"
-                      class="text-xs text-sky-700 hover:text-sky-900 font-bold flex items-center space-x-1 focus:outline-none">
+                      class="text-xs text-sky-700 hover:text-sky-900 font-bold flex items-center space-x-1 focus:outline-none min-h-[32px] px-1">
                 <span x-text="showPin ? 'Hide PIN' : 'Show PIN'"></span>
               </button>
             </div>
             <div class="relative">
               <input :type="showPin ? 'text' : 'password'" name="password" maxlength="6" required placeholder="••••••"
-                     class="w-full px-4 py-3 bg-white text-center tracking-[0.35em] text-lg font-mono font-bold rounded-xl border border-slate-200 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 focus:outline-none transition-all shadow-sm pr-11">
+                     inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code"
+                     class="w-full px-4 py-3 bg-white text-center tracking-[0.35em] text-lg font-mono font-bold rounded-xl border border-slate-200 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 focus:outline-none transition-all shadow-sm pr-11 min-h-[48px]">
               <button type="button" @click="showPin = !showPin"
-                      class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 focus:outline-none"
+                      class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 focus:outline-none min-w-[44px] justify-center"
                       aria-label="Toggle PIN visibility">
                 <svg x-show="!showPin" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
@@ -201,7 +236,7 @@
           </div>
 
           <button type="submit" 
-                  class="w-full py-3.5 bg-gradient-to-r from-sky-600 via-teal-600 to-emerald-600 text-white font-black rounded-xl text-sm shadow-xl shadow-sky-600/25 hover:opacity-95 transition-all transform active:scale-[0.98] flex items-center justify-center space-x-2">
+                  class="w-full py-3.5 sm:py-4 bg-gradient-to-r from-sky-600 via-teal-600 to-emerald-600 text-white font-black rounded-xl text-sm shadow-xl shadow-sky-600/25 hover:opacity-95 transition-all transform active:scale-[0.98] flex items-center justify-center space-x-2 min-h-[50px]">
             <span>Access Terminal Report</span>
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
@@ -215,22 +250,24 @@
           <div>
             <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-1.5">Staff Email</label>
             <input type="email" name="username" required placeholder="teacher@calischools.ng"
-                   class="w-full px-4 py-3 bg-white rounded-xl border border-slate-200 text-sm font-semibold text-slate-800 focus:ring-2 focus:ring-sky-500 focus:outline-none transition-all shadow-sm">
+                   inputmode="email" autocomplete="email" autocapitalize="none"
+                   class="w-full px-4 py-3.5 bg-white rounded-xl border border-slate-200 text-base sm:text-sm font-semibold text-slate-800 focus:ring-2 focus:ring-sky-500 focus:outline-none transition-all shadow-sm min-h-[48px]">
           </div>
 
           <div x-data="{ showPass: false }">
             <div class="flex justify-between items-center mb-1.5">
               <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider">Password</label>
               <button type="button" @click="showPass = !showPass"
-                      class="text-xs text-sky-700 hover:text-sky-900 font-bold flex items-center space-x-1 focus:outline-none">
+                      class="text-xs text-sky-700 hover:text-sky-900 font-bold flex items-center space-x-1 focus:outline-none min-h-[32px] px-1">
                 <span x-text="showPass ? 'Hide' : 'Show'"></span>
               </button>
             </div>
             <div class="relative">
               <input :type="showPass ? 'text' : 'password'" name="password" required placeholder="••••••••"
-                     class="w-full px-4 py-3 bg-white rounded-xl border border-slate-200 text-sm font-semibold text-slate-800 focus:ring-2 focus:ring-sky-500 focus:outline-none transition-all shadow-sm pr-11">
+                     autocomplete="current-password"
+                     class="w-full px-4 py-3.5 bg-white rounded-xl border border-slate-200 text-base sm:text-sm font-semibold text-slate-800 focus:ring-2 focus:ring-sky-500 focus:outline-none transition-all shadow-sm pr-11 min-h-[48px]">
               <button type="button" @click="showPass = !showPass"
-                      class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 focus:outline-none"
+                      class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 focus:outline-none min-w-[44px] justify-center"
                       aria-label="Toggle Password visibility">
                 <svg x-show="!showPass" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
@@ -244,7 +281,7 @@
           </div>
 
           <button type="submit" 
-                  class="w-full py-3.5 bg-slate-900 text-white font-black rounded-xl text-sm hover:bg-slate-800 transition-all transform active:scale-[0.98] flex items-center justify-center space-x-2 shadow-xl shadow-slate-900/30">
+                  class="w-full py-3.5 sm:py-4 bg-slate-900 text-white font-black rounded-xl text-sm hover:bg-slate-800 transition-all transform active:scale-[0.98] flex items-center justify-center space-x-2 shadow-xl shadow-slate-900/30 min-h-[50px]">
             <span>Open Staff Gradebook</span>
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
@@ -252,7 +289,7 @@
           </button>
         </form>
 
-        <div class="mt-6 pt-5 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
+        <div class="mt-5 sm:mt-6 pt-4 sm:pt-5 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
           <span>🔒 256-Bit SSL Encrypted</span>
           <span>NDPA 2023 Compliant</span>
         </div>

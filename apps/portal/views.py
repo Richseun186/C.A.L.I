@@ -48,8 +48,20 @@ def dashboard_view(request):
             messages.error(request, "Student profile record not found.")
             return redirect('portal:landing')
     elif user.role in ['CLASS_TEACHER', 'SUBJECT_TEACHER', 'HEADMISTRESS', 'PRINCIPAL', 'EXAM_OFFICER', 'SUPER_ADMIN', 'PROPRIETOR']:
+        from apps.assessments.models import ScoreSheet
+        from apps.academics.models import StudentProfile, SchoolClass
+        
+        is_admin_user = user.role in ['SUPER_ADMIN', 'PROPRIETOR', 'PRINCIPAL', 'HEADMISTRESS', 'EXAM_OFFICER'] or user.is_staff
+        all_sheets = ScoreSheet.objects.all().select_related('subject', 'class_arm__school_class__level_group', 'teacher') if is_admin_user else None
+        student_count = StudentProfile.objects.count() if is_admin_user else 0
+        class_count = SchoolClass.objects.count() if is_admin_user else 0
+
         return render(request, 'portal/staff_dashboard.html', {
-            'current_term': current_term
+            'current_term': current_term,
+            'is_admin_user': is_admin_user,
+            'all_sheets': all_sheets,
+            'student_count': student_count,
+            'class_count': class_count
         })
 
     return redirect('portal:landing')

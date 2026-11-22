@@ -47,71 +47,195 @@
 
   <!-- Content -->
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full">
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-slate-200 gap-4">
-      <div>
-        <h2 class="text-2xl font-black text-slate-900 tracking-tight">Assigned Score Sheets</h2>
-        <p class="text-xs text-slate-500 mt-1">
-          Select a subject sheet below to record CA and Exam scores, or submit for terminal approval.
-        </p>
-      </div>
-
-      {% if current_term %}
-        <div class="inline-flex items-center space-x-2 bg-sky-50 border border-sky-200 px-4 py-2 rounded-2xl">
-          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-          <span class="text-xs font-bold text-sky-900 font-mono">{{ current_term }}</span>
-        </div>
-      {% endif %}
-    </div>
-
-    <!-- Score Sheets Grid -->
-    <div class="mt-8">
-      {% with sheets=request.user.score_sheets.all %}
-        {% if sheets %}
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {% for sheet in sheets %}
-              <div class="bg-white rounded-3xl p-6 shadow-sm hover:shadow-md border border-slate-200 transition-all flex flex-col justify-between">
-                <div>
-                  <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-                    <span class="text-xs font-mono font-bold text-slate-400">{{ sheet.class_arm.school_class.level_group.name }}</span>
-                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase
-                      {% if sheet.status == 'APPROVED' %}bg-emerald-100 text-emerald-800
-                      {% elif sheet.status == 'SUBMITTED' %}bg-blue-100 text-blue-800
-                      {% elif sheet.status == 'REVIEWED' %}bg-indigo-100 text-indigo-800
-                      {% else %}bg-amber-100 text-amber-800{% endif %}">
-                      {{ sheet.get_status_display }}
-                    </span>
-                  </div>
-
-                  <h3 class="text-lg font-black text-slate-900 mt-3">{{ sheet.subject.name }}</h3>
-                  <p class="text-xs text-slate-600 font-semibold mt-0.5">Class: {{ sheet.class_arm }}</p>
-                  <p class="text-xs text-slate-400 mt-2">Pupils Enrolled: {{ sheet.scores.count }}</p>
-                </div>
-
-                <div class="pt-5 mt-4 border-t border-slate-100">
-                  <a href="{% url 'assessments:sheet-detail' sheet.id %}"
-                     class="w-full py-2.5 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs flex items-center justify-center space-x-2 transition-all">
-                    <span>Open Gradebook</span>
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
-                    </svg>
-                  </a>
-                </div>
-              </div>
-            {% endfor %}
-          </div>
-        {% else %}
-          <div class="bg-white rounded-3xl p-12 text-center max-w-lg mx-auto border border-slate-200">
-            <div class="w-16 h-16 bg-slate-100 text-slate-400 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
-              📋
+    
+    {% if is_admin_user %}
+      <!-- School Admin Executive Command Center -->
+      <div class="mb-10">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-slate-200 gap-4">
+          <div>
+            <div class="flex items-center space-x-2">
+              <span class="px-2.5 py-0.5 rounded-full text-xs font-black uppercase bg-amber-100 text-amber-900 border border-amber-300">
+                Administrator
+              </span>
+              <h2 class="text-2xl font-black text-slate-900 tracking-tight">School Executive Management Console</h2>
             </div>
-            <h3 class="text-base font-bold text-slate-900">No Sheets Currently Assigned</h3>
             <p class="text-xs text-slate-500 mt-1">
-              Your account has not yet been assigned to a subject class for this session. Contact the Exam Officer or Admin to assign your timetable.
+              Welcome, {{ request.user.get_full_name }}. Overview of school academics, Nigerian curriculum subject bank, and assessment approval queue.
             </p>
           </div>
+
+          {% if current_term %}
+            <div class="inline-flex items-center space-x-2 bg-emerald-50 border border-emerald-200 px-4 py-2 rounded-2xl">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span class="text-xs font-bold text-emerald-900 font-mono">{{ current_term }}</span>
+            </div>
+          {% endif %}
+        </div>
+
+        <!-- Admin Quick Actions Bar -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
+          <!-- Action 1: Nigerian Subject Bank -->
+          <a href="{% url 'academics:subject-bank' %}" 
+             class="p-5 rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-700 text-white shadow-lg shadow-emerald-700/20 hover:scale-[1.02] transition-all flex flex-col justify-between">
+            <div class="flex items-center justify-between">
+              <span class="text-2xl">🇳🇬</span>
+              <span class="px-2 py-0.5 bg-white/20 text-white text-[10px] font-extrabold rounded-full">Curriculum</span>
+            </div>
+            <div class="mt-4">
+              <h3 class="text-sm font-black">Nigerian Subject Bank</h3>
+              <p class="text-[11px] text-emerald-100 mt-0.5">Toggle national NERDC subjects offered</p>
+            </div>
+          </a>
+
+          <!-- Action 2: Django System Admin -->
+          <a href="/admin/" target="_blank"
+             class="p-5 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-800 text-white shadow-lg shadow-slate-900/20 hover:scale-[1.02] transition-all flex flex-col justify-between">
+            <div class="flex items-center justify-between">
+              <span class="text-2xl">⚙️</span>
+              <span class="px-2 py-0.5 bg-white/20 text-white text-[10px] font-extrabold rounded-full">Superuser</span>
+            </div>
+            <div class="mt-4">
+              <h3 class="text-sm font-black">Django Admin Console</h3>
+              <p class="text-[11px] text-slate-300 mt-0.5">Manage students, parents, and fee records</p>
+            </div>
+          </a>
+
+          <!-- Stat 1: Total Enrolled Students -->
+          <div class="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm flex flex-col justify-between">
+            <div class="flex items-center justify-between">
+              <span class="text-2xl">🎓</span>
+              <span class="text-[10px] font-extrabold text-slate-400 uppercase">Enrolled</span>
+            </div>
+            <div class="mt-3">
+              <div class="text-2xl font-black font-mono text-slate-900">{{ student_count }}</div>
+              <p class="text-[11px] font-semibold text-slate-500 mt-0.5">Total Pupils & Students</p>
+            </div>
+          </div>
+
+          <!-- Stat 2: Total Classes -->
+          <div class="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm flex flex-col justify-between">
+            <div class="flex items-center justify-between">
+              <span class="text-2xl">🏫</span>
+              <span class="text-[10px] font-extrabold text-slate-400 uppercase">Structure</span>
+            </div>
+            <div class="mt-3">
+              <div class="text-2xl font-black font-mono text-slate-900">{{ class_count }}</div>
+              <p class="text-[11px] font-semibold text-slate-500 mt-0.5">Academic Classes Configured</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- All School Sheets Overview for Admin -->
+        {% if all_sheets %}
+          <div class="mt-10">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-lg font-black text-slate-900">All School Score Sheets (Master Approval Queue)</h3>
+              <span class="text-xs font-bold text-slate-500">{{ all_sheets.count }} Sheets Active</span>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {% for sheet in all_sheets %}
+                <div class="bg-white rounded-3xl p-6 shadow-sm hover:shadow-md border border-slate-200 transition-all flex flex-col justify-between">
+                  <div>
+                    <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                      <span class="text-xs font-mono font-bold text-slate-400">{{ sheet.class_arm.school_class.level_group.name }}</span>
+                      <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase
+                        {% if sheet.status == 'APPROVED' %}bg-emerald-100 text-emerald-800
+                        {% elif sheet.status == 'SUBMITTED' %}bg-blue-100 text-blue-800
+                        {% elif sheet.status == 'REVIEWED' %}bg-indigo-100 text-indigo-800
+                        {% else %}bg-amber-100 text-amber-800{% endif %}">
+                        {{ sheet.get_status_display }}
+                      </span>
+                    </div>
+
+                    <h3 class="text-lg font-black text-slate-900 mt-3">{{ sheet.subject.name }}</h3>
+                    <p class="text-xs text-slate-600 font-semibold mt-0.5">Class: <span class="font-bold text-slate-800">{{ sheet.class_arm }}</span></p>
+                    <p class="text-xs text-slate-500 mt-1">Teacher: <span class="font-bold text-slate-700">{{ sheet.teacher.get_full_name|default:"Unassigned" }}</span></p>
+                  </div>
+
+                  <div class="pt-5 mt-4 border-t border-slate-100">
+                    <a href="{% url 'assessments:sheet-detail' sheet.id %}"
+                       class="w-full py-2.5 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs flex items-center justify-center space-x-2 transition-all">
+                      <span>Inspect Sheet & Approve</span>
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                      </svg>
+                    </a>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
         {% endif %}
-      {% endwith %}
-    </div>
+      </div>
+    {% else %}
+      <!-- Standard Teacher View -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-slate-200 gap-4">
+        <div>
+          <h2 class="text-2xl font-black text-slate-900 tracking-tight">Assigned Teacher Score Sheets</h2>
+          <p class="text-xs text-slate-500 mt-1">
+            Select a subject sheet below to record continuous assessment (CA) and Exam scores.
+          </p>
+        </div>
+
+        {% if current_term %}
+          <div class="inline-flex items-center space-x-2 bg-sky-50 border border-sky-200 px-4 py-2 rounded-2xl">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span class="text-xs font-bold text-sky-900 font-mono">{{ current_term }}</span>
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- Teacher's Own Score Sheets -->
+      <div class="mt-8">
+        {% with sheets=request.user.score_sheets.all %}
+          {% if sheets %}
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {% for sheet in sheets %}
+                <div class="bg-white rounded-3xl p-6 shadow-sm hover:shadow-md border border-slate-200 transition-all flex flex-col justify-between">
+                  <div>
+                    <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                      <span class="text-xs font-mono font-bold text-slate-400">{{ sheet.class_arm.school_class.level_group.name }}</span>
+                      <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase
+                        {% if sheet.status == 'APPROVED' %}bg-emerald-100 text-emerald-800
+                        {% elif sheet.status == 'SUBMITTED' %}bg-blue-100 text-blue-800
+                        {% elif sheet.status == 'REVIEWED' %}bg-indigo-100 text-indigo-800
+                        {% else %}bg-amber-100 text-amber-800{% endif %}">
+                        {{ sheet.get_status_display }}
+                      </span>
+                    </div>
+
+                    <h3 class="text-lg font-black text-slate-900 mt-3">{{ sheet.subject.name }}</h3>
+                    <p class="text-xs text-slate-600 font-semibold mt-0.5">Class: {{ sheet.class_arm }}</p>
+                    <p class="text-xs text-slate-400 mt-2">Pupils Enrolled: {{ sheet.scores.count }}</p>
+                  </div>
+
+                  <div class="pt-5 mt-4 border-t border-slate-100">
+                    <a href="{% url 'assessments:sheet-detail' sheet.id %}"
+                       class="w-full py-2.5 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs flex items-center justify-center space-x-2 transition-all">
+                      <span>Open Gradebook</span>
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                      </svg>
+                    </a>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          {% else %}
+            <div class="bg-white rounded-3xl p-12 text-center max-w-lg mx-auto border border-slate-200">
+              <div class="w-16 h-16 bg-slate-100 text-slate-400 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+                📋
+              </div>
+              <h3 class="text-base font-bold text-slate-900">No Sheets Currently Assigned</h3>
+              <p class="text-xs text-slate-500 mt-1">
+                Your teacher account has not yet been assigned to a class arm for this term. Please contact the Exam Officer or School Principal.
+              </p>
+            </div>
+          {% endif %}
+        {% endwith %}
+      </div>
+    {% endif %}
+
   </main>
 </div>
 {% endblock %}

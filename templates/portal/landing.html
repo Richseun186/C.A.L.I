@@ -1,308 +1,315 @@
 {% extends 'base.html' %}
-{% block title %}CALI Schools | Terminal Result Portal{% endblock %}
+{% block title %}CALI Schools | Terminal Result & Management Portal{% endblock %}
 
 {% block content %}
-<div x-data="{ activeTab: 'parent', showPin: false, showPass: false, get isLowData() { return !!(window.Alpine && Alpine.store && Alpine.store('perf') && Alpine.store('perf').lowData); } }" 
-     class="min-h-screen aurora-mesh text-white flex flex-col justify-between relative overflow-hidden">
+<div x-data="{ 
+       activeTab: 'parent', 
+       showPin: false, 
+       showPass: false, 
+       showAdminPass: false,
+       parentUsername: '',
+       parentPin: '',
+       staffEmail: '',
+       staffPassword: '',
+       adminEmail: '',
+       adminPassword: '',
+       fillDemo(role) {
+         if (role === 'parent') {
+           this.activeTab = 'parent';
+           this.parentUsername = '08031234567';
+           this.parentPin = '123456';
+         } else if (role === 'staff') {
+           this.activeTab = 'staff';
+           this.staffEmail = 'primary.teacher@calischools.ng';
+           this.staffPassword = 'TeachPass123!';
+         } else if (role === 'admin') {
+           this.activeTab = 'admin';
+           this.adminEmail = 'admin@calischools.ng';
+           this.adminPassword = 'AdminPass123!';
+         }
+       }
+     }" 
+     class="min-h-screen aurora-mesh flex flex-col justify-between relative overflow-hidden select-none">
 
-  <!-- Subtle Geometric Pattern Overlay -->
+  <!-- Subtle Geometric Pattern Watermark -->
   <div class="absolute inset-0 ankara-pattern pointer-events-none"></div>
 
-  <!-- Large Circular Moving Object: Upper Right (Responsive for Mobile & Desktop, Non-blocking) -->
-  <div class="celestial-orb orb-upper-right pointer-events-none select-none" aria-hidden="true">
-    <!-- Atmospheric Radial Glow -->
-    <div class="absolute inset-0 rounded-full bg-gradient-to-br from-sky-400/25 via-emerald-400/20 to-transparent blur-3xl pointer-events-none"></div>
-    <!-- Outer Dashed Cyan Orbit Track -->
-    <div class="orbital-track-dashed pointer-events-none">
-      <div class="satellite-marker bg-cyan-400 text-cyan-400 pointer-events-none"></div>
-    </div>
-    <!-- Inner Solid Aquamarine Orbit Track -->
-    <div class="orbital-track-solid pointer-events-none">
-      <div class="satellite-marker bg-emerald-400 text-emerald-400 pointer-events-none" style="top: auto; bottom: -5px;"></div>
-    </div>
-    <!-- Central Glassmorphic Holographic Core -->
-    <div class="absolute inset-[28%] rounded-full bg-gradient-to-tr from-cyan-500/20 via-sky-300/30 to-emerald-400/20 backdrop-blur-md border border-cyan-300/30 shadow-[0_0_50px_rgba(56,189,248,0.25)] flex items-center justify-center pointer-events-none">
-      <div class="w-12 sm:w-16 h-12 sm:h-16 rounded-full bg-white/10 border border-white/40 animate-pulse-soft pointer-events-none"></div>
+  <!-- Ambient Light Orbs (Gentle, non-intrusive, strictly background) -->
+  <div class="celestial-orb orb-upper-right pointer-events-none opacity-60 sm:opacity-80" aria-hidden="true">
+    <div class="absolute inset-0 rounded-full bg-gradient-to-br from-sky-400/20 via-emerald-400/15 to-transparent blur-3xl"></div>
+    <div class="orbital-track-dashed">
+      <div class="satellite-marker bg-cyan-400 text-cyan-400"></div>
     </div>
   </div>
 
-  <!-- Large Circular Moving Object: Lower Left (Responsive for Mobile & Desktop, Non-blocking) -->
-  <div class="celestial-orb orb-lower-left pointer-events-none select-none" aria-hidden="true">
-    <!-- Atmospheric Radial Glow -->
-    <div class="absolute inset-0 rounded-full bg-gradient-to-tr from-amber-400/25 via-rose-500/18 to-transparent blur-3xl pointer-events-none"></div>
-    <!-- Outer Dashed Gold Orbit Track -->
-    <div class="orbital-track-gold pointer-events-none">
-      <div class="satellite-marker bg-amber-400 text-amber-400 pointer-events-none"></div>
-    </div>
-    <!-- Inner Solid Rose Orbit Track -->
-    <div class="orbital-track-rose pointer-events-none">
-      <div class="satellite-marker bg-rose-400 text-rose-400 pointer-events-none" style="top: auto; bottom: -5px;"></div>
-    </div>
-    <!-- Central Glassmorphic Holographic Core -->
-    <div class="absolute inset-[30%] rounded-full bg-gradient-to-tr from-amber-500/20 via-orange-400/20 to-rose-400/20 backdrop-blur-md border border-amber-300/30 shadow-[0_0_50px_rgba(245,158,11,0.25)] flex items-center justify-center pointer-events-none">
-      <div class="w-14 sm:w-20 h-14 sm:h-20 rounded-full bg-white/10 border border-white/40 animate-pulse-soft pointer-events-none"></div>
+  <div class="celestial-orb orb-lower-left pointer-events-none opacity-50 sm:opacity-70" aria-hidden="true">
+    <div class="absolute inset-0 rounded-full bg-gradient-to-tr from-amber-400/20 via-emerald-500/15 to-transparent blur-3xl"></div>
+    <div class="orbital-track-gold">
+      <div class="satellite-marker bg-amber-400 text-amber-400"></div>
     </div>
   </div>
 
-  <!-- Background Floating Academic Motifs (Pure CSS, Low-overhead) -->
-  <template x-if="!isLowData">
-    <div class="absolute inset-0 pointer-events-none overflow-hidden select-none" aria-hidden="true">
-      <div class="absolute top-20 left-[10%] text-5xl opacity-20 animate-float-slow">🎓</div>
-      <div class="absolute top-1/3 right-[12%] text-6xl opacity-15 animate-float-reverse">📚</div>
-      <div class="absolute bottom-28 left-[15%] text-5xl opacity-20 animate-float-slow" style="animation-delay: -3s;">🔬</div>
-      <div class="absolute bottom-1/4 right-[20%] text-5xl opacity-15 animate-float-reverse" style="animation-delay: -2s;">✏️</div>
-      <div class="absolute top-1/2 left-[5%] text-4xl opacity-15 animate-float-slow" style="animation-delay: -4s;">📐</div>
-    </div>
-  </template>
-
-  <!-- Top Navigation Bar: Crest with Circular Kinetic Typography, Title, Low-Data Toggle -->
-  <header class="px-4 py-3.5 sm:px-6 sm:py-5 flex justify-between items-center max-w-7xl mx-auto w-full z-20 relative">
-    <div class="flex items-center space-x-3 sm:space-x-4">
-      <!-- Crest with Circular Kinetic Typography Seal -->
-      <div class="relative w-12 sm:w-14 h-12 sm:h-14 flex items-center justify-center flex-shrink-0">
-        <svg class="spin-circular-text absolute inset-[-12px] sm:inset-[-14px] w-[72px] sm:w-[84px] h-[72px] sm:h-[84px] text-[7.5px] sm:text-[8.5px] font-extrabold uppercase tracking-[0.22em] fill-sky-200/90 pointer-events-none" viewBox="0 0 200 200">
-          <path id="crestCirclePath" d="M 100, 100 m -70, 0 a 70,70 0 1,1 140,0 a 70,70 0 1,1 -140,0" fill="none" />
-          <text>
-            <textPath href="#crestCirclePath" startOffset="0%">
-              • CALI SCHOOLS • EXCELLENCE • INTEGRITY • 2026/2027 •
-            </textPath>
-          </text>
-        </svg>
-        <div class="w-10 sm:w-12 h-10 sm:h-12 p-1 sm:p-1.5 bg-white/95 rounded-2xl shadow-xl flex items-center justify-center border border-white/50 backdrop-blur-md relative z-10">
-          <img src="/static/img/cali_logo.png" alt="CALI Schools Crest" class="w-8 sm:w-9 h-8 sm:h-9 object-contain">
-        </div>
+  <!-- Top Navigation Bar -->
+  <header class="px-4 py-4 sm:px-8 sm:py-6 flex justify-between items-center max-w-7xl mx-auto w-full z-20 relative">
+    <div class="flex items-center space-x-3.5 sm:space-x-4">
+      <div class="w-12 h-12 sm:w-14 sm:h-14 p-1.5 bg-white rounded-2xl shadow-xl flex items-center justify-center border border-white/60">
+        <img src="/static/img/cali_logo.png" alt="CALI Schools Crest" class="w-9 sm:w-10 h-9 sm:h-10 object-contain">
       </div>
       <div>
-        <div class="flex items-center space-x-1.5 sm:space-x-2">
-          <h1 class="font-black text-lg sm:text-xl tracking-tight leading-none text-white animate-circular-drift">CALI SCHOOLS</h1>
-          <span class="px-1.5 sm:px-2 py-0.5 rounded-full text-[8.5px] sm:text-[9px] font-extrabold uppercase bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-            Official
+        <div class="flex items-center space-x-2">
+          <h1 class="font-black text-lg sm:text-xl tracking-tight text-white leading-none">CALI SCHOOLS</h1>
+          <span class="px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+            Official Portal
           </span>
         </div>
-        <p class="text-[11px] sm:text-xs text-sky-200/80 font-medium tracking-wide mt-0.5 animate-circular-drift" style="animation-delay: -3.5s;">Excellence • Integrity • Innovation</p>
+        <p class="text-xs text-slate-300 font-medium tracking-wide mt-1">Excellence &bull; Integrity &bull; Innovation</p>
       </div>
     </div>
 
-    <!-- Data-Saver Mode Pill -->
-    <button @click="if (window.Alpine && Alpine.store('perf')) Alpine.store('perf').toggle()" 
-            type="button"
-            class="px-3 sm:px-4 py-2 rounded-full text-[11px] sm:text-xs font-bold backdrop-blur-xl border border-white/20 transition-all flex items-center space-x-2 shadow-lg active:scale-95 min-h-[40px] cursor-pointer relative z-30"
-            :class="isLowData ? 'bg-amber-400 text-slate-950 border-amber-300' : 'bg-white/10 text-white hover:bg-white/20'">
-      <span class="w-2 h-2 rounded-full" :class="isLowData ? 'bg-black' : 'bg-emerald-400 animate-pulse'"></span>
-      <span x-text="isLowData ? 'Low-Data' : 'Data-Saver'"></span>
-    </button>
+    <!-- Official Session Pill -->
+    <div class="hidden sm:flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-slate-900/60 border border-slate-700/80 text-xs font-bold text-sky-200 backdrop-blur-md">
+      <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+      <span>2026/2027 Academic Session</span>
+    </div>
   </header>
 
-  <!-- Main Login Card with Iridescent Aura & Orbiting Circular Write-ups -->
-  <main class="w-full max-w-md mx-auto px-4 sm:px-6 py-2 sm:py-4 z-30 relative pointer-events-auto">
-
-    <!-- Mobile Circulating Write-ups Ribbon (Smooth continuous loop for mobile devices, Non-blocking) -->
-    <template x-if="!isLowData">
-      <div class="lg:hidden w-full overflow-hidden py-1.5 mb-2 select-none pointer-events-none" aria-hidden="true">
-        <div class="animate-marquee-circular space-x-2.5 pointer-events-none">
-          <div class="px-3 py-1.5 rounded-full bg-slate-900/80 backdrop-blur-md border border-cyan-400/40 text-cyan-200 text-[11px] font-bold flex items-center space-x-1.5 shadow-md pointer-events-none">
-            <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
-            <span>✨ WAEC & NECO Standard Grading</span>
-          </div>
-          <div class="px-3 py-1.5 rounded-full bg-slate-900/80 backdrop-blur-md border border-emerald-400/40 text-emerald-200 text-[11px] font-bold flex items-center space-x-1.5 shadow-md pointer-events-none">
-            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span>📊 Real-Time Continuous Assessments</span>
-          </div>
-          <div class="px-3 py-1.5 rounded-full bg-slate-900/80 backdrop-blur-md border border-amber-400/40 text-amber-200 text-[11px] font-bold flex items-center space-x-1.5 shadow-md pointer-events-none">
-            <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
-            <span>🔒 Cryptographic Tamper-Proof Seals</span>
-          </div>
-          <!-- Loop Duplication for seamless continuous circulation -->
-          <div class="px-3 py-1.5 rounded-full bg-slate-900/80 backdrop-blur-md border border-cyan-400/40 text-cyan-200 text-[11px] font-bold flex items-center space-x-1.5 shadow-md pointer-events-none">
-            <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
-            <span>✨ WAEC & NECO Standard Grading</span>
-          </div>
-          <div class="px-3 py-1.5 rounded-full bg-slate-900/80 backdrop-blur-md border border-emerald-400/40 text-emerald-200 text-[11px] font-bold flex items-center space-x-1.5 shadow-md pointer-events-none">
-            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span>📊 Real-Time Continuous Assessments</span>
-          </div>
-          <div class="px-3 py-1.5 rounded-full bg-slate-900/80 backdrop-blur-md border border-amber-400/40 text-amber-200 text-[11px] font-bold flex items-center space-x-1.5 shadow-md pointer-events-none">
-            <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
-            <span>🔒 Cryptographic Tamper-Proof Seals</span>
-          </div>
+  <!-- Main Login Card Container -->
+  <main class="w-full max-w-lg mx-auto px-4 sm:px-6 py-4 sm:py-8 z-30 relative">
+    <div class="academic-card p-6 sm:p-9 shadow-2xl relative">
+      
+      <!-- Card Title & Department Crest -->
+      <div class="text-center mb-6">
+        <div class="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-tr from-sky-600 via-teal-600 to-emerald-600 text-white mb-3 shadow-lg shadow-sky-600/25">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/>
+          </svg>
         </div>
+        <h2 class="text-2xl font-black tracking-tight text-slate-900">Result & Portal Gateway</h2>
+        <p class="text-xs font-semibold text-slate-500 mt-1">
+          {% if current_term %}
+            Session: <span class="text-slate-800 font-bold">{{ current_term.session.name }}</span> &bull; <span class="text-emerald-700 font-bold">{{ current_term.get_term_display }}</span>
+          {% else %}
+            Unified Terminal Access for Parents, Teachers & Administrators
+          {% endif %}
+        </p>
       </div>
-    </template>
 
-    <!-- Desktop Circular Moving Write-ups (Orbiting outside the card perimeter, Non-blocking) -->
-    <template x-if="!isLowData">
-      <div class="absolute inset-0 pointer-events-none hidden lg:flex items-center justify-center overflow-visible select-none -z-10" aria-hidden="true">
-        <div class="relative w-0 h-0 pointer-events-none">
-          <!-- Write-up 1: WAEC & NECO Standardized Grading -->
-          <div class="orbit-writeup-1 absolute top-0 left-0 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap pointer-events-none">
-            <div class="px-4 py-2 rounded-full bg-slate-900/85 backdrop-blur-md border border-cyan-400/40 text-cyan-200 text-xs font-bold shadow-xl shadow-cyan-950/40 flex items-center space-x-2 pointer-events-none">
-              <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
-              <span>✨ WAEC & NECO Standard Grading</span>
-            </div>
-          </div>
+      <!-- 3-Role Tab Switcher: Parent, Teacher, School Admin -->
+      <div class="grid grid-cols-3 bg-slate-100 p-1.5 rounded-2xl mb-6 border border-slate-200">
+        <button @click="activeTab = 'parent'" 
+                type="button"
+                :class="activeTab === 'parent' ? 'bg-white shadow text-slate-950 font-black' : 'text-slate-600 hover:text-slate-900 font-bold'"
+                class="py-2.5 text-xs rounded-xl transition-all flex items-center justify-center space-x-1 cursor-pointer">
+          <span>🎓</span>
+          <span>Parent / Ward</span>
+        </button>
 
-          <!-- Write-up 2: Real-Time Continuous Assessments -->
-          <div class="orbit-writeup-2 absolute top-0 left-0 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap pointer-events-none">
-            <div class="px-4 py-2 rounded-full bg-slate-900/85 backdrop-blur-md border border-emerald-400/40 text-emerald-200 text-xs font-bold shadow-xl shadow-emerald-950/40 flex items-center space-x-2 pointer-events-none">
-              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-              <span>📊 Real-Time Continuous Assessments</span>
-            </div>
-          </div>
+        <button @click="activeTab = 'staff'" 
+                type="button"
+                :class="activeTab === 'staff' ? 'bg-white shadow text-slate-950 font-black' : 'text-slate-600 hover:text-slate-900 font-bold'"
+                class="py-2.5 text-xs rounded-xl transition-all flex items-center justify-center space-x-1 cursor-pointer">
+          <span>📚</span>
+          <span>Staff Portal</span>
+        </button>
 
-          <!-- Write-up 3: Cryptographic QR Seals -->
-          <div class="orbit-writeup-3 absolute top-0 left-0 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap pointer-events-none">
-            <div class="px-4 py-2 rounded-full bg-slate-900/85 backdrop-blur-md border border-amber-400/40 text-amber-200 text-xs font-bold shadow-xl shadow-amber-950/40 flex items-center space-x-2 pointer-events-none">
-              <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
-              <span>🔒 Cryptographic Tamper-Proof Seals</span>
-            </div>
-          </div>
-        </div>
+        <button @click="activeTab = 'admin'" 
+                type="button"
+                :class="activeTab === 'admin' ? 'bg-gradient-to-r from-amber-500 to-yellow-500 shadow text-slate-950 font-black' : 'text-slate-600 hover:text-slate-900 font-bold'"
+                class="py-2.5 text-xs rounded-xl transition-all flex items-center justify-center space-x-1 cursor-pointer">
+          <span>🛡️</span>
+          <span>Admin Portal</span>
+        </button>
       </div>
-    </template>
 
-    <div class="iridescent-border p-1 shadow-2xl relative z-30 pointer-events-auto">
-      <div class="glass-panel text-slate-900 rounded-[1.65rem] p-6 sm:p-9 animate-fade-up relative z-40 pointer-events-auto">
-        
-        <div class="text-center mb-5 sm:mb-6">
-          <div class="inline-flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-tr from-sky-600 to-emerald-500 text-white mb-2.5 sm:mb-3 shadow-lg shadow-sky-600/20">
-            <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"/>
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/>
-            </svg>
-          </div>
-          <h2 class="text-xl sm:text-2xl font-black tracking-tight text-slate-900">Result Checker</h2>
-          <p class="text-xs text-slate-500 mt-1">
-            {% if current_term %}
-              Session: <strong class="text-slate-700">{{ current_term.session.name }}</strong> &bull; <span class="font-bold text-sky-700">{{ current_term.get_term_display }}</span>
-            {% else %}
-              Multi-Level Access for All CALI Pupils & Students
-            {% endif %}
-          </p>
+      <!-- TAB 1: Parent & Pupil Form -->
+      <form x-show="activeTab === 'parent'" method="POST" action="{% url 'portal:login' %}" class="space-y-4">
+        {% csrf_token %}
+        <div>
+          <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-1.5">
+            Admission No. or Registered Phone
+          </label>
+          <input type="text" name="username" x-model="parentUsername" required placeholder="e.g. 08031234567 or CALI/2026/001"
+                 autocomplete="username" autocapitalize="none"
+                 class="w-full px-4 py-3.5 bg-slate-50 rounded-xl border border-slate-300 text-slate-900 text-base sm:text-sm font-semibold focus:bg-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none transition-all min-h-[48px]">
         </div>
 
-        <!-- Role Tab Switcher -->
-        <div class="flex bg-slate-100/90 p-1 rounded-2xl mb-5 sm:mb-6 border border-slate-200 relative z-50">
-          <button @click="activeTab = 'parent'" 
-                  type="button"
-                  :class="activeTab === 'parent' ? 'bg-white shadow text-slate-950 font-black' : 'text-slate-600 hover:text-slate-900 font-bold'"
-                  class="flex-1 py-2.5 text-xs rounded-xl transition-all min-h-[42px] flex items-center justify-center cursor-pointer relative z-50">
-            Parent / Pupil
-          </button>
-          <button @click="activeTab = 'staff'" 
-                  type="button"
-                  :class="activeTab === 'staff' ? 'bg-white shadow text-slate-950 font-black' : 'text-slate-600 hover:text-slate-900 font-bold'"
-                  class="flex-1 py-2.5 text-xs rounded-xl transition-all min-h-[42px] flex items-center justify-center cursor-pointer relative z-50">
-            Staff Portal
-          </button>
-        </div>
-
-        <!-- Parent/Student Form -->
-        <form x-show="activeTab === 'parent'" method="POST" action="{% url 'portal:login' %}" class="space-y-4 relative z-50">
-          {% csrf_token %}
-          <div>
-            <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-1.5">
-              Admission No. or Registered Phone
+        <div>
+          <div class="flex justify-between items-center mb-1.5">
+            <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider">
+              6-Digit Access PIN
             </label>
-            <div class="relative">
-              <input type="text" name="username" required placeholder="e.g. 08031234567 or CALI/2026/001"
-                     autocomplete="username" autocapitalize="none"
-                     class="w-full px-4 py-3.5 bg-white rounded-xl border border-slate-200 text-base sm:text-sm font-semibold text-slate-800 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 focus:outline-none transition-all shadow-sm min-h-[48px] relative z-50">
-            </div>
+            <button type="button" @click="showPin = !showPin"
+                    class="text-xs text-emerald-700 hover:text-emerald-900 font-bold flex items-center space-x-1 focus:outline-none cursor-pointer">
+              <span x-text="showPin ? 'Hide PIN' : 'Show PIN'"></span>
+            </button>
           </div>
-
-          <div>
-            <div class="flex justify-between items-center mb-1.5">
-              <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider">
-                6-Digit Access PIN
-              </label>
-              <button type="button" @click="showPin = !showPin"
-                      class="text-xs text-sky-700 hover:text-sky-900 font-bold flex items-center space-x-1 focus:outline-none min-h-[32px] px-1 cursor-pointer relative z-50">
-                <span x-text="showPin ? 'Hide PIN' : 'Show PIN'"></span>
-              </button>
-            </div>
-            <div class="relative">
-              <input :type="showPin ? 'text' : 'password'" name="password" maxlength="6" required placeholder="••••••"
-                     inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code"
-                     class="w-full px-4 py-3 bg-white text-center tracking-[0.35em] text-lg font-mono font-bold rounded-xl border border-slate-200 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 focus:outline-none transition-all shadow-sm pr-11 min-h-[48px] relative z-50">
-              <button type="button" @click="showPin = !showPin"
-                      class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 focus:outline-none min-w-[44px] justify-center cursor-pointer relative z-50"
-                      aria-label="Toggle PIN visibility">
-                <svg x-show="!showPin" class="w-5 h-5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                </svg>
-                <svg x-show="showPin" x-cloak class="w-5 h-5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18"/>
-                </svg>
-              </button>
-            </div>
+          <div class="relative">
+            <input :type="showPin ? 'text' : 'password'" name="password" x-model="parentPin" maxlength="6" required placeholder="••••••"
+                   inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code"
+                   class="w-full px-4 py-3 bg-slate-50 text-center tracking-[0.35em] text-lg font-mono font-bold rounded-xl border border-slate-300 text-slate-900 focus:bg-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none transition-all pr-12 min-h-[48px]">
+            <button type="button" @click="showPin = !showPin"
+                    class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 focus:outline-none min-w-[44px] justify-center cursor-pointer"
+                    aria-label="Toggle PIN visibility">
+              <svg x-show="!showPin" class="w-5 h-5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+              </svg>
+              <svg x-show="showPin" x-cloak class="w-5 h-5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18"/>
+              </svg>
+            </button>
           </div>
-
-          <button type="submit" 
-                  class="w-full py-3.5 sm:py-4 bg-gradient-to-r from-sky-600 via-teal-600 to-emerald-600 text-white font-black rounded-xl text-sm shadow-xl shadow-sky-600/25 hover:opacity-95 transition-all transform active:scale-[0.98] flex items-center justify-center space-x-2 min-h-[50px] cursor-pointer relative z-50">
-            <span>Access Terminal Report</span>
-            <svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
-            </svg>
-          </button>
-        </form>
-
-        <!-- Staff Form -->
-        <form x-show="activeTab === 'staff'" x-cloak method="POST" action="{% url 'portal:login' %}" class="space-y-4 relative z-50">
-          {% csrf_token %}
-          <div>
-            <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-1.5">Staff Email</label>
-            <input type="email" name="username" required placeholder="teacher@calischools.ng"
-                   inputmode="email" autocomplete="email" autocapitalize="none"
-                   class="w-full px-4 py-3.5 bg-white rounded-xl border border-slate-200 text-base sm:text-sm font-semibold text-slate-800 focus:ring-2 focus:ring-sky-500 focus:outline-none transition-all shadow-sm min-h-[48px] relative z-50">
-          </div>
-
-          <div>
-            <div class="flex justify-between items-center mb-1.5">
-              <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider">Password</label>
-              <button type="button" @click="showPass = !showPass"
-                      class="text-xs text-sky-700 hover:text-sky-900 font-bold flex items-center space-x-1 focus:outline-none min-h-[32px] px-1 cursor-pointer relative z-50">
-                <span x-text="showPass ? 'Hide' : 'Show'"></span>
-              </button>
-            </div>
-            <div class="relative">
-              <input :type="showPass ? 'text' : 'password'" name="password" required placeholder="••••••••"
-                     autocomplete="current-password"
-                     class="w-full px-4 py-3.5 bg-white rounded-xl border border-slate-200 text-base sm:text-sm font-semibold text-slate-800 focus:ring-2 focus:ring-sky-500 focus:outline-none transition-all shadow-sm pr-11 min-h-[48px] relative z-50">
-              <button type="button" @click="showPass = !showPass"
-                      class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 focus:outline-none min-w-[44px] justify-center cursor-pointer relative z-50"
-                      aria-label="Toggle Password visibility">
-                <svg x-show="!showPass" class="w-5 h-5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                </svg>
-                <svg x-show="showPass" x-cloak class="w-5 h-5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18"/>
-                </svg>
-              </button>
-            </div>
-          </div>
-
-          <button type="submit" 
-                  class="w-full py-3.5 sm:py-4 bg-slate-900 text-white font-black rounded-xl text-sm hover:bg-slate-800 transition-all transform active:scale-[0.98] flex items-center justify-center space-x-2 shadow-xl shadow-slate-900/30 min-h-[50px] cursor-pointer relative z-50">
-            <span>Open Staff Gradebook</span>
-            <svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
-            </svg>
-          </button>
-        </form>
-
-        <div class="mt-5 sm:mt-6 pt-4 sm:pt-5 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
-          <span>🔒 256-Bit SSL Encrypted</span>
-          <span>NDPA 2023 Compliant</span>
         </div>
+
+        <button type="submit" 
+                class="w-full py-4 bg-gradient-to-r from-emerald-600 via-teal-600 to-sky-600 text-white font-black rounded-xl text-sm shadow-xl shadow-emerald-700/20 hover:opacity-95 transition-all transform active:scale-[0.98] flex items-center justify-center space-x-2 min-h-[50px] cursor-pointer">
+          <span>Check Terminal Report</span>
+          <svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+          </svg>
+        </button>
+      </form>
+
+      <!-- TAB 2: Staff & Teacher Form -->
+      <form x-show="activeTab === 'staff'" x-cloak method="POST" action="{% url 'portal:login' %}" class="space-y-4">
+        {% csrf_token %}
+        <div>
+          <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-1.5">
+            Teacher / Staff Email
+          </label>
+          <input type="email" name="username" x-model="staffEmail" required placeholder="teacher@calischools.ng"
+                 inputmode="email" autocomplete="email" autocapitalize="none"
+                 class="w-full px-4 py-3.5 bg-slate-50 rounded-xl border border-slate-300 text-slate-900 text-base sm:text-sm font-semibold focus:bg-white focus:ring-2 focus:ring-sky-500 focus:border-sky-500 focus:outline-none transition-all min-h-[48px]">
+        </div>
+
+        <div>
+          <div class="flex justify-between items-center mb-1.5">
+            <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider">
+              Password
+            </label>
+            <button type="button" @click="showPass = !showPass"
+                    class="text-xs text-sky-700 hover:text-sky-900 font-bold flex items-center space-x-1 focus:outline-none cursor-pointer">
+              <span x-text="showPass ? 'Hide' : 'Show'"></span>
+            </button>
+          </div>
+          <div class="relative">
+            <input :type="showPass ? 'text' : 'password'" name="password" x-model="staffPassword" required placeholder="••••••••"
+                   autocomplete="current-password"
+                   class="w-full px-4 py-3.5 bg-slate-50 rounded-xl border border-slate-300 text-slate-900 text-base sm:text-sm font-semibold focus:bg-white focus:ring-2 focus:ring-sky-500 focus:border-sky-500 focus:outline-none transition-all pr-12 min-h-[48px]">
+            <button type="button" @click="showPass = !showPass"
+                    class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 focus:outline-none min-w-[44px] justify-center cursor-pointer"
+                    aria-label="Toggle Password visibility">
+              <svg x-show="!showPass" class="w-5 h-5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+              </svg>
+              <svg x-show="showPass" x-cloak class="w-5 h-5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" 
+                class="w-full py-4 bg-slate-900 text-white font-black rounded-xl text-sm hover:bg-slate-800 transition-all transform active:scale-[0.98] flex items-center justify-center space-x-2 shadow-xl shadow-slate-900/25 min-h-[50px] cursor-pointer">
+          <span>Open Staff Gradebook</span>
+          <svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+          </svg>
+        </button>
+      </form>
+
+      <!-- TAB 3: School Admin Form (Principal / Proprietor / Exam Officer) -->
+      <form x-show="activeTab === 'admin'" x-cloak method="POST" action="{% url 'portal:login' %}" class="space-y-4">
+        {% csrf_token %}
+        <div>
+          <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-1.5 flex items-center justify-between">
+            <span>Administrator Email</span>
+            <span class="text-[10px] text-amber-600 font-bold bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">Full Control</span>
+          </label>
+          <input type="email" name="username" x-model="adminEmail" required placeholder="admin@calischools.ng"
+                 inputmode="email" autocomplete="email" autocapitalize="none"
+                 class="w-full px-4 py-3.5 bg-slate-50 rounded-xl border border-amber-300 text-slate-900 text-base sm:text-sm font-semibold focus:bg-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 focus:outline-none transition-all min-h-[48px]">
+        </div>
+
+        <div>
+          <div class="flex justify-between items-center mb-1.5">
+            <label class="block text-xs font-extrabold text-slate-700 uppercase tracking-wider">
+              Admin Password
+            </label>
+            <button type="button" @click="showAdminPass = !showAdminPass"
+                    class="text-xs text-amber-700 hover:text-amber-900 font-bold flex items-center space-x-1 focus:outline-none cursor-pointer">
+              <span x-text="showAdminPass ? 'Hide' : 'Show'"></span>
+            </button>
+          </div>
+          <div class="relative">
+            <input :type="showAdminPass ? 'text' : 'password'" name="password" x-model="adminPassword" required placeholder="••••••••"
+                   autocomplete="current-password"
+                   class="w-full px-4 py-3.5 bg-slate-50 rounded-xl border border-amber-300 text-slate-900 text-base sm:text-sm font-semibold focus:bg-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 focus:outline-none transition-all pr-12 min-h-[48px]">
+            <button type="button" @click="showAdminPass = !showAdminPass"
+                    class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 focus:outline-none min-w-[44px] justify-center cursor-pointer"
+                    aria-label="Toggle Password visibility">
+              <svg x-show="!showAdminPass" class="w-5 h-5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+              </svg>
+              <svg x-show="showAdminPass" x-cloak class="w-5 h-5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" 
+                class="w-full py-4 bg-gradient-to-r from-amber-600 via-amber-500 to-yellow-500 text-slate-950 font-black rounded-xl text-sm hover:opacity-95 transition-all transform active:scale-[0.98] flex items-center justify-center space-x-2 shadow-xl shadow-amber-600/25 min-h-[50px] cursor-pointer">
+          <span>Sign In to School Admin Portal</span>
+          <svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+          </svg>
+        </button>
+
+        <!-- Direct Super Admin Console Link -->
+        <div class="pt-2 text-center">
+          <a href="/admin/" 
+             class="text-xs font-bold text-amber-700 hover:text-amber-900 hover:underline inline-flex items-center space-x-1.5">
+            <span>Direct Django Superuser Console &rarr;</span>
+          </a>
+        </div>
+      </form>
+
+      <!-- Quick Demo Logins Helper -->
+      <div class="mt-6 pt-5 border-t border-slate-100">
+        <p class="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider mb-2.5 text-center">
+          Quick Demo Credentials (Click to Auto-Fill)
+        </p>
+        <div class="flex flex-wrap justify-center gap-2">
+          <button @click="fillDemo('admin')" type="button"
+                  class="px-2.5 py-1 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-900 text-[11px] font-bold border border-amber-200 transition-all cursor-pointer">
+            🛡️ Admin (admin@calischools.ng)
+          </button>
+          <button @click="fillDemo('parent')" type="button"
+                  class="px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-900 text-[11px] font-bold border border-emerald-200 transition-all cursor-pointer">
+            🎓 Parent (08031234567)
+          </button>
+          <button @click="fillDemo('staff')" type="button"
+                  class="px-2.5 py-1 rounded-lg bg-sky-50 hover:bg-sky-100 text-sky-900 text-[11px] font-bold border border-sky-200 transition-all cursor-pointer">
+            📚 Teacher (primary.teacher@...)
+          </button>
+        </div>
+      </div>
+
+      <!-- Trust Badges -->
+      <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400 font-medium">
+        <span>🔒 256-Bit SSL Encrypted</span>
+        <span>NDPA 2023 Compliant</span>
       </div>
     </div>
   </main>
 
   <!-- Footer -->
-  <footer class="p-6 text-center text-xs text-sky-200/70 z-20">
-    &copy; 2026 CALI Schools Nigeria. All rights reserved.
+  <footer class="p-4 sm:p-6 text-center text-xs text-slate-400 z-20">
+    &copy; 2026 CALI International Schools. All rights reserved.
   </footer>
 </div>
 {% endblock %}

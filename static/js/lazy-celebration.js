@@ -1,22 +1,34 @@
 // CALI Schools Performance & Celebration Controller
-document.addEventListener('alpine:init', () => {
-  Alpine.store('perf', {
-    lowData: localStorage.getItem('cali_low_data') === 'true',
-    toggle() {
-      this.lowData = !this.lowData;
-      localStorage.setItem('cali_low_data', this.lowData);
-      if (this.lowData) {
-        document.documentElement.classList.add('low-data-mode');
-      } else {
-        document.documentElement.classList.remove('low-data-mode');
+function registerPerfStore() {
+  if (window.Alpine && typeof Alpine.store === 'function') {
+    try {
+      if (!Alpine.store('perf')) {
+        Alpine.store('perf', {
+          lowData: localStorage.getItem('cali_low_data') === 'true',
+          toggle() {
+            this.lowData = !this.lowData;
+            localStorage.setItem('cali_low_data', this.lowData);
+            if (this.lowData) {
+              document.documentElement.classList.add('low-data-mode');
+            } else {
+              document.documentElement.classList.remove('low-data-mode');
+            }
+          }
+        });
       }
+    } catch (e) {
+      console.warn('Perf store registration handled:', e);
     }
-  });
+  }
 
   if (localStorage.getItem('cali_low_data') === 'true') {
     document.documentElement.classList.add('low-data-mode');
   }
-});
+}
+
+document.addEventListener('alpine:init', registerPerfStore);
+document.addEventListener('DOMContentLoaded', registerPerfStore);
+if (window.Alpine) registerPerfStore();
 
 // Lazy-Loaded Confetti Burst (Only ~4KB injected on demand for high-achieving results)
 window.triggerCelebration = function() {

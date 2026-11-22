@@ -298,13 +298,30 @@ body {
   }
 }
 
-/* Large Celestial Moving Orbs */
+/* Large Celestial Moving Orbs (Guaranteed non-blocking for all clicks) */
+.celestial-orb,
+.celestial-orb *,
+.orbital-track-dashed,
+.orbital-track-solid,
+.orbital-track-gold,
+.orbital-track-rose,
+.satellite-marker,
+.orbit-writeup-1,
+.orbit-writeup-2,
+.orbit-writeup-3,
+.orbit-writeup-1 *,
+.orbit-writeup-2 *,
+.orbit-writeup-3 * {
+  pointer-events: none !important;
+  user-select: none !important;
+}
+
 .celestial-orb {
   position: absolute;
-  pointer-events: none;
+  pointer-events: none !important;
   border-radius: 50%;
   will-change: transform;
-  z-index: 5;
+  z-index: 1;
 }
 
 .orb-upper-right {

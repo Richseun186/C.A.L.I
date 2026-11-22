@@ -1,11 +1,11 @@
-# Render Blueprint for CALI Schools Portal
+# Render Blueprint for CALI Schools Portal with Neon Platform Backend
 services:
   - type: web
     name: cali-schools-portal
     env: docker
     dockerfilePath: ./Dockerfile
     plan: free
-    region: frankfurt # Frankfurt or London gives fastest low-ping latency to Lagos, Nigeria
+    region: frankfurt # Low-latency routing to Lagos, Nigeria and Neon eu-central-1
     autoDeploy: true
     envVars:
       - key: DJANGO_SETTINGS_MODULE
@@ -13,17 +13,18 @@ services:
       - key: SECRET_KEY
         generateValue: true
       - key: DATABASE_URL
-        fromDatabase:
-          name: cali-database
-          property: connectionString
+        sync: false # Paste Neon DATABASE_URL here
+      - key: AWS_ACCESS_KEY_ID
+        sync: false # Neon Object Storage Access Key
+      - key: AWS_SECRET_ACCESS_KEY
+        sync: false # Neon Object Storage Secret Key
+      - key: AWS_ENDPOINT_URL_S3
+        sync: false # Neon Object Storage Endpoint URL
+      - key: AWS_REGION
+        value: eu-central-1
+      - key: AWS_STORAGE_BUCKET_NAME
+        value: assets
       - key: PAYSTACK_PUBLIC_KEY
         value: pk_test_cali_demo_key
       - key: PAYSTACK_SECRET_KEY
         value: sk_test_cali_demo_key
-
-databases:
-  - name: cali-database
-    databaseName: cali_db
-    user: cali_admin
-    plan: free
-    region: frankfurt

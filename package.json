@@ -1,0 +1,12 @@
+{
+  "name": "cali-schools-portal",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": ".\\.venv\\Scripts\\python manage.py collectstatic --noinput && .\\.venv\\Scripts\\python manage.py check"
+  },
+  "dependencies": {
+    "@neon/config": "^1.14.6",
+    "@neon/env": "^2.1.9"
+  }
+}

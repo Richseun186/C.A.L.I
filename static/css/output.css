@@ -207,9 +207,197 @@ body {
   animation: floatSoft 5s ease-in-out infinite;
 }
 
-.animate-float-reverse {
-  animation: floatSoft 6s ease-in-out infinite reverse;
+/* =========================================================
+   8. CIRCULAR KINETIC TYPOGRAPHY & CELESTIAL ORBITAL OBJECTS
+   ========================================================= */
+
+/* Continuous 360-Degree Rotations */
+@keyframes spinClockwise {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
+
+@keyframes spinCounterClockwise {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(-360deg); }
+}
+
+/* Upright Circular Motion for Write-ups & Badges */
+@keyframes circularOrbitA {
+  0% {
+    transform: rotate(0deg) translate(clamp(270px, 26vw, 360px), 0px) rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg) translate(clamp(270px, 26vw, 360px), 0px) rotate(-360deg);
+  }
+}
+
+@keyframes circularOrbitB {
+  0% {
+    transform: rotate(120deg) translate(clamp(270px, 26vw, 360px), 0px) rotate(-120deg);
+  }
+  100% {
+    transform: rotate(480deg) translate(clamp(270px, 26vw, 360px), 0px) rotate(-480deg);
+  }
+}
+
+@keyframes circularOrbitC {
+  0% {
+    transform: rotate(240deg) translate(clamp(270px, 26vw, 360px), 0px) rotate(-240deg);
+  }
+  100% {
+    transform: rotate(600deg) translate(clamp(270px, 26vw, 360px), 0px) rotate(-600deg);
+  }
+}
+
+/* Elliptical Harmonic Wave for Write-ups */
+@keyframes circularDrift {
+  0%   { transform: translate(0px, 0px) rotate(0deg); }
+  25%  { transform: translate(8px, -10px) rotate(0.8deg); }
+  50%  { transform: translate(0px, -18px) rotate(0deg); }
+  75%  { transform: translate(-8px, -10px) rotate(-0.8deg); }
+  100% { transform: translate(0px, 0px) rotate(0deg); }
+}
+
+.animate-circular-drift {
+  animation: circularDrift 7s ease-in-out infinite;
+}
+
+@keyframes orbFloatHarmonic {
+  0% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  33% {
+    transform: translate(25px, -22px) scale(1.05);
+  }
+  66% {
+    transform: translate(-18px, 18px) scale(0.96);
+  }
+  100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+}
+
+@keyframes orbFloatReverse {
+  0% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  33% {
+    transform: translate(-22px, 24px) scale(1.06);
+  }
+  66% {
+    transform: translate(20px, -16px) scale(0.95);
+  }
+  100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+}
+
+/* Large Celestial Moving Orbs */
+.celestial-orb {
+  position: absolute;
+  pointer-events: none;
+  border-radius: 50%;
+  will-change: transform;
+  z-index: 5;
+}
+
+.orb-upper-right {
+  top: -120px;
+  right: -100px;
+  width: 480px;
+  height: 480px;
+  animation: orbFloatHarmonic 22s ease-in-out infinite;
+}
+
+.orb-lower-left {
+  bottom: -140px;
+  left: -120px;
+  width: 520px;
+  height: 520px;
+  animation: orbFloatReverse 26s ease-in-out infinite;
+}
+
+/* Concentric Orbital Rings */
+.orbital-track-dashed {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1.5px dashed rgba(56, 189, 248, 0.4);
+  animation: spinClockwise 45s linear infinite;
+}
+
+.orbital-track-solid {
+  position: absolute;
+  inset: 14%;
+  border-radius: 50%;
+  border: 1px solid rgba(52, 211, 153, 0.35);
+  animation: spinCounterClockwise 35s linear infinite;
+}
+
+.orbital-track-gold {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1.5px dashed rgba(251, 191, 36, 0.4);
+  animation: spinCounterClockwise 50s linear infinite;
+}
+
+.orbital-track-rose {
+  position: absolute;
+  inset: 15%;
+  border-radius: 50%;
+  border: 1px solid rgba(244, 63, 94, 0.35);
+  animation: spinClockwise 40s linear infinite;
+}
+
+/* Satellite dots riding the tracks */
+.satellite-marker {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  top: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 0 16px 2px currentColor;
+}
+
+/* Circular Rotating Text Seal */
+.spin-circular-text {
+  animation: spinClockwise 28s linear infinite;
+  transform-origin: center center;
+}
+
+/* Orbital write-ups circling */
+.orbit-writeup-1 {
+  animation: circularOrbitA 26s linear infinite;
+}
+
+.orbit-writeup-2 {
+  animation: circularOrbitB 26s linear infinite;
+}
+
+.orbit-writeup-3 {
+  animation: circularOrbitC 26s linear infinite;
+}
+
+/* Responsive adjustments for low-data or reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .celestial-orb,
+  .orbital-track-dashed,
+  .orbital-track-solid,
+  .orbital-track-gold,
+  .orbital-track-rose,
+  .spin-circular-text,
+  .orbit-writeup-1,
+  .orbit-writeup-2,
+  .orbit-writeup-3,
+  .animate-circular-drift {
+    animation: none !important;
+  }
+}
+
 
 /* =========================================================
    7. PRINT OPTIMIZATION

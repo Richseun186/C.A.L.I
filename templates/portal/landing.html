@@ -8,6 +8,42 @@
   <!-- Subtle Geometric Pattern Overlay -->
   <div class="absolute inset-0 ankara-pattern pointer-events-none"></div>
 
+  <!-- Large Circular Moving Object: Upper Right -->
+  <div class="celestial-orb orb-upper-right hidden sm:block" aria-hidden="true">
+    <!-- Atmospheric Radial Glow -->
+    <div class="absolute inset-0 rounded-full bg-gradient-to-br from-sky-400/25 via-emerald-400/20 to-transparent blur-3xl"></div>
+    <!-- Outer Dashed Cyan Orbit Track -->
+    <div class="orbital-track-dashed">
+      <div class="satellite-marker bg-cyan-400 text-cyan-400"></div>
+    </div>
+    <!-- Inner Solid Aquamarine Orbit Track -->
+    <div class="orbital-track-solid">
+      <div class="satellite-marker bg-emerald-400 text-emerald-400" style="top: auto; bottom: -5px;"></div>
+    </div>
+    <!-- Central Glassmorphic Holographic Core -->
+    <div class="absolute inset-[28%] rounded-full bg-gradient-to-tr from-cyan-500/20 via-sky-300/30 to-emerald-400/20 backdrop-blur-md border border-cyan-300/30 shadow-[0_0_50px_rgba(56,189,248,0.25)] flex items-center justify-center">
+      <div class="w-16 h-16 rounded-full bg-white/10 border border-white/40 animate-pulse-soft"></div>
+    </div>
+  </div>
+
+  <!-- Large Circular Moving Object: Lower Left -->
+  <div class="celestial-orb orb-lower-left hidden sm:block" aria-hidden="true">
+    <!-- Atmospheric Radial Glow -->
+    <div class="absolute inset-0 rounded-full bg-gradient-to-tr from-amber-400/25 via-rose-500/18 to-transparent blur-3xl"></div>
+    <!-- Outer Dashed Gold Orbit Track -->
+    <div class="orbital-track-gold">
+      <div class="satellite-marker bg-amber-400 text-amber-400"></div>
+    </div>
+    <!-- Inner Solid Rose Orbit Track -->
+    <div class="orbital-track-rose">
+      <div class="satellite-marker bg-rose-400 text-rose-400" style="top: auto; bottom: -5px;"></div>
+    </div>
+    <!-- Central Glassmorphic Holographic Core -->
+    <div class="absolute inset-[30%] rounded-full bg-gradient-to-tr from-amber-500/20 via-orange-400/20 to-rose-400/20 backdrop-blur-md border border-amber-300/30 shadow-[0_0_50px_rgba(245,158,11,0.25)] flex items-center justify-center">
+      <div class="w-20 h-20 rounded-full bg-white/10 border border-white/40 animate-pulse-soft"></div>
+    </div>
+  </div>
+
   <!-- Background Floating Academic Motifs (Pure CSS, Low-overhead) -->
   <template x-if="!lowData">
     <div class="absolute inset-0 pointer-events-none overflow-hidden select-none" aria-hidden="true">
@@ -19,20 +55,31 @@
     </div>
   </template>
 
-  <!-- Top Navigation Bar: Crest, Title, Low-Data Toggle -->
+  <!-- Top Navigation Bar: Crest with Circular Kinetic Typography, Title, Low-Data Toggle -->
   <header class="p-6 flex justify-between items-center max-w-7xl mx-auto w-full z-20">
-    <div class="flex items-center space-x-3.5">
-      <div class="w-13 h-13 p-1.5 bg-white/95 rounded-2xl shadow-xl flex items-center justify-center border border-white/50 backdrop-blur-md">
-        <img src="/static/img/cali_logo.png" alt="CALI Schools Crest" class="w-10 h-10 object-contain">
+    <div class="flex items-center space-x-4">
+      <!-- Crest with Circular Kinetic Typography Seal -->
+      <div class="relative w-14 h-14 flex items-center justify-center">
+        <svg class="spin-circular-text absolute inset-[-14px] w-[84px] h-[84px] text-[8.5px] font-extrabold uppercase tracking-[0.22em] fill-sky-200/90 pointer-events-none" viewBox="0 0 200 200">
+          <path id="crestCirclePath" d="M 100, 100 m -70, 0 a 70,70 0 1,1 140,0 a 70,70 0 1,1 -140,0" fill="none" />
+          <text>
+            <textPath href="#crestCirclePath" startOffset="0%">
+              • CALI SCHOOLS • EXCELLENCE • INTEGRITY • 2026/2027 •
+            </textPath>
+          </text>
+        </svg>
+        <div class="w-12 h-12 p-1.5 bg-white/95 rounded-2xl shadow-xl flex items-center justify-center border border-white/50 backdrop-blur-md relative z-10">
+          <img src="/static/img/cali_logo.png" alt="CALI Schools Crest" class="w-9 h-9 object-contain">
+        </div>
       </div>
       <div>
         <div class="flex items-center space-x-2">
-          <h1 class="font-black text-xl tracking-tight leading-none text-white">CALI SCHOOLS</h1>
+          <h1 class="font-black text-xl tracking-tight leading-none text-white animate-circular-drift">CALI SCHOOLS</h1>
           <span class="px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
             Official Portal
           </span>
         </div>
-        <p class="text-xs text-sky-200/80 font-medium tracking-wide mt-0.5">Excellence • Integrity • Innovation</p>
+        <p class="text-xs text-sky-200/80 font-medium tracking-wide mt-0.5 animate-circular-drift" style="animation-delay: -3.5s;">Excellence • Integrity • Innovation</p>
       </div>
     </div>
 
@@ -45,8 +92,40 @@
     </button>
   </header>
 
-  <!-- Main Login Card with Iridescent Aura -->
-  <main class="w-full max-w-md mx-auto px-6 py-4 z-20">
+  <!-- Main Login Card with Iridescent Aura & Orbiting Circular Write-ups -->
+  <main class="w-full max-w-md mx-auto px-6 py-4 z-20 relative">
+
+    <!-- Circular Moving Write-ups (Orbiting in a circle around the main card) -->
+    <template x-if="!lowData">
+      <div class="absolute inset-0 pointer-events-none hidden lg:flex items-center justify-center overflow-visible select-none" aria-hidden="true">
+        <div class="relative w-0 h-0">
+          <!-- Write-up 1: WAEC & NECO Standardized Grading -->
+          <div class="orbit-writeup-1 absolute top-0 left-0 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap">
+            <div class="px-4 py-2 rounded-full bg-slate-900/85 backdrop-blur-md border border-cyan-400/40 text-cyan-200 text-xs font-bold shadow-xl shadow-cyan-950/40 flex items-center space-x-2 pointer-events-auto hover:scale-105 transition-transform">
+              <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+              <span>✨ WAEC & NECO Standard Grading</span>
+            </div>
+          </div>
+
+          <!-- Write-up 2: Real-Time Continuous Assessments -->
+          <div class="orbit-writeup-2 absolute top-0 left-0 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap">
+            <div class="px-4 py-2 rounded-full bg-slate-900/85 backdrop-blur-md border border-emerald-400/40 text-emerald-200 text-xs font-bold shadow-xl shadow-emerald-950/40 flex items-center space-x-2 pointer-events-auto hover:scale-105 transition-transform">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span>📊 Real-Time Continuous Assessments</span>
+            </div>
+          </div>
+
+          <!-- Write-up 3: Cryptographic QR Seals -->
+          <div class="orbit-writeup-3 absolute top-0 left-0 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap">
+            <div class="px-4 py-2 rounded-full bg-slate-900/85 backdrop-blur-md border border-amber-400/40 text-amber-200 text-xs font-bold shadow-xl shadow-amber-950/40 flex items-center space-x-2 pointer-events-auto hover:scale-105 transition-transform">
+              <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+              <span>🔒 Cryptographic Tamper-Proof Seals</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </template>
+
     <div class="iridescent-border p-1 shadow-2xl">
       <div class="glass-panel text-slate-900 rounded-[1.65rem] p-8 sm:p-9 animate-fade-up">
         
